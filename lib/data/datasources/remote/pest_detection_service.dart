@@ -1,210 +1,205 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import '../../models/pest_diagnosis_model.dart';
 
 /// AI病害虫診断サービス
-/// Google Cloud Vision API + カスタムモデルによる画像診断
+/// Google Gemini API（gemini-1.5-flash）によるマルチモーダル画像診断
 class PestDetectionService {
-  final Dio _dio;
+  // 使用するGeminiモデル名
+  static const String _modelName = 'gemini-1.5-flash';
 
-  // Google Cloud Vision API エンドポイント
-  static const String _visionApiUrl =
-      'https://vision.googleapis.com/v1/images:annotate';
-
-  // APIキーは環境変数から取得
+  // APIキーは環境変数から取得（dart-define で GEMINI_API_KEY を渡すこと）
   static const String _apiKey = String.fromEnvironment(
-    'GOOGLE_CLOUD_API_KEY',
-    defaultValue: 'YOUR_VISION_API_KEY_HERE',
+    'GEMINI_API_KEY',
+    defaultValue: 'YOUR_GEMINI_API_KEY',
   );
 
-  PestDetectionService({Dio? dio})
-      : _dio = dio ??
-            Dio(BaseOptions(
-              connectTimeout: const Duration(seconds: 30),
-              receiveTimeout: const Duration(seconds: 30),
-            ));
+  // Gemini に送る診断プロンプト（日本語）
+  static const String _diagnosisPrompt = '''
+この植物の画像を詳しく診断してください。
+病害虫や病気が見られる場合は以下のJSON形式で返してください：
+{
+  "detected": true,
+  "pest_name": "病害虫・病気の名前",
+  "description": "詳細な説明",
+  "severity": "mild/moderate/severe",
+  "treatments": ["対処法1", "対処法2"],
+  "prevention": ["予防法1", "予防法2"]
+}
+問題がない場合は {"detected": false} を返してください。
+JSONのみを返し、前後に余分なテキストや```マークダウンは含めないでください。
+''';
 
-  /// 画像ファイルから病害虫を診断
+  /// 画像ファイルから病害虫を診断する
   ///
   /// [imageFile] 診断する画像ファイル
-  /// 戻り値: 診断結果モデルのリスト（信頼度順）
+  /// 戻り値: 診断結果モデルのリスト
   Future<List<PestDiagnosisModel>> diagnoseFromFile(File imageFile) async {
     try {
-      // 画像をBase64エンコード
-      final bytes = await imageFile.readAsBytes();
-      final base64Image = base64Encode(bytes);
+      // 画像バイトを読み込み、MIMEタイプを判定する
+      final imageBytes = await imageFile.readAsBytes();
+      final mimeType = _detectMimeType(imageFile.path);
 
-      // Vision API リクエストボディ
-      final requestBody = {
-        'requests': [
-          {
-            'image': {'content': base64Image},
-            'features': [
-              {'type': 'LABEL_DETECTION', 'maxResults': 20},
-              {'type': 'WEB_DETECTION', 'maxResults': 10},
-              {'type': 'OBJECT_LOCALIZATION', 'maxResults': 10},
-            ],
-          }
-        ]
-      };
-
-      final response = await _dio.post(
-        '$_visionApiUrl?key=$_apiKey',
-        data: requestBody,
-        options: Options(headers: {'Content-Type': 'application/json'}),
+      // Gemini クライアントを初期化する
+      final model = GenerativeModel(
+        model: _modelName,
+        apiKey: _apiKey,
       );
 
-      // Vision APIレスポンスを解析して病害虫を特定
-      return _parseVisionResponse(
-        response.data as Map<String, dynamic>,
+      // マルチモーダルコンテンツを構築する（テキストプロンプト + 画像）
+      final content = [
+        Content.multi([
+          TextPart(_diagnosisPrompt),
+          DataPart(mimeType, imageBytes),
+        ]),
+      ];
+
+      // Gemini API にリクエストを送信する
+      final response = await model.generateContent(content);
+
+      // レスポンステキストを取得する
+      final responseText = response.text;
+      if (responseText == null || responseText.isEmpty) {
+        // レスポンスが空の場合は健康状態として扱う
+        return [PestDiagnosisModel.healthy(imagePath: imageFile.path)];
+      }
+
+      // JSONレスポンスをパースして診断結果に変換する
+      return _parseGeminiResponse(
+        responseText,
         imagePath: imageFile.path,
       );
-    } on DioException catch (e) {
+    } on GenerativeAIException catch (e) {
+      // Gemini API 固有のエラー
       throw PestDetectionException(
-        message: '画像診断に失敗しました: ${e.message}',
-        statusCode: e.response?.statusCode,
+        message: 'Gemini API エラー: ${e.message}',
+      );
+    } catch (e) {
+      // その他の予期しないエラー
+      throw PestDetectionException(
+        message: '画像診断中に予期しないエラーが発生しました: $e',
       );
     }
   }
 
-  /// Vision APIのレスポンスを病害虫診断結果に変換
-  List<PestDiagnosisModel> _parseVisionResponse(
-    Map<String, dynamic> response, {
+  /// Gemini のレスポンステキストを病害虫診断結果モデルのリストに変換する
+  List<PestDiagnosisModel> _parseGeminiResponse(
+    String responseText, {
     required String imagePath,
   }) {
-    final responses = response['responses'] as List?;
-    if (responses == null || responses.isEmpty) return [];
+    try {
+      // レスポンスからJSONを抽出する（マークダウンコードブロックが含まれる場合に対応）
+      final jsonString = _extractJson(responseText);
+      final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 
-    final firstResponse = responses.first as Map<String, dynamic>;
-    final labels = firstResponse['labelAnnotations'] as List? ?? [];
-    final webDetection =
-        firstResponse['webDetection'] as Map<String, dynamic>? ?? {};
-
-    // 病害虫関連のキーワードでフィルタリング
-    final pestKeywords = [
-      'aphid', 'アブラムシ',
-      'whitefly', 'コナジラミ',
-      'spider mite', 'ハダニ',
-      'thrips', 'アザミウマ',
-      'caterpillar', 'イモムシ',
-      'fungus', 'カビ',
-      'blight', '疫病',
-      'rust', 'さび病',
-      'mildew', 'うどんこ病',
-      'leaf spot', '葉斑病',
-      'rot', '腐敗',
-      'wilt', '萎凋病',
-    ];
-
-    final results = <PestDiagnosisModel>[];
-
-    for (final label in labels) {
-      final description =
-          (label['description'] as String? ?? '').toLowerCase();
-      final score = (label['score'] as num?)?.toDouble() ?? 0.0;
-
-      // 病害虫キーワードに一致するかチェック
-      for (final keyword in pestKeywords) {
-        if (description.contains(keyword.toLowerCase()) && score > 0.5) {
-          results.add(_buildDiagnosisModel(
-            labelDescription: label['description'] as String,
-            confidence: score,
-            imagePath: imagePath,
-          ));
-          break;
-        }
+      // "detected" フラグが false、または存在しない場合は健康状態とみなす
+      final detected = jsonData['detected'] as bool? ?? false;
+      if (!detected) {
+        return [PestDiagnosisModel.healthy(imagePath: imagePath)];
       }
-    }
 
-    // 病害虫が検出されなかった場合は健康診断を返す
-    if (results.isEmpty) {
-      results.add(PestDiagnosisModel.healthy(imagePath: imagePath));
-    }
+      // 重症度文字列を検証・正規化する（Gemini が想定外の値を返す場合に備える）
+      final rawSeverity = jsonData['severity'] as String? ?? 'mild';
+      final severity = _normalizeSeverity(rawSeverity);
 
-    // 信頼度順にソート
-    results.sort((a, b) => b.confidenceScore.compareTo(a.confidenceScore));
-    return results;
+      // treatmentsリストを安全にキャストする
+      final treatmentsList = jsonData['treatments'];
+      final treatments = treatmentsList is List
+          ? treatmentsList.map((e) => e.toString()).toList()
+          : <String>[];
+
+      // preventionリストを安全にキャストする
+      final preventionList = jsonData['prevention'];
+      final prevention = preventionList is List
+          ? preventionList.map((e) => e.toString()).toList()
+          : <String>[];
+
+      // 診断結果モデルを生成する
+      final diagnosis = PestDiagnosisModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        pestName: jsonData['pest_name'] as String? ?? '不明な病害虫',
+        description: jsonData['description'] as String? ?? '',
+        // Gemini はseverityを返すため、confidenceScoreはseverityから推定する
+        confidenceScore: _severityToConfidence(severity),
+        severityLevel: severity,
+        treatmentSteps: treatments,
+        preventionTips: prevention,
+        imageUrl: imagePath,
+        diagnosedAt: DateTime.now(),
+      );
+
+      return [diagnosis];
+    } on FormatException catch (e) {
+      // JSONパースに失敗した場合は診断エラーとして例外を投げる
+      throw PestDetectionException(
+        message: 'Gemini のレスポンスをJSONとして解析できませんでした: $e\nレスポンス: $responseText',
+      );
+    }
   }
 
-  /// ラベル情報から診断モデルを構築
-  PestDiagnosisModel _buildDiagnosisModel({
-    required String labelDescription,
-    required double confidence,
-    required String imagePath,
-  }) {
-    // 病害虫データベースからマッチング（実際はローカルDBまたはAPIから取得）
-    final pestInfo = _getPestInfo(labelDescription);
+  /// レスポンステキストからJSONブロックを抽出する
+  ///
+  /// Gemini がマークダウンのコードブロック（```json ... ```）で
+  /// 囲んで返した場合でも正しく取り出せるようにする
+  String _extractJson(String text) {
+    // ```json ... ``` または ``` ... ``` ブロックを検索する
+    final codeBlockRegex = RegExp(r'```(?:json)?\s*([\s\S]*?)\s*```');
+    final match = codeBlockRegex.firstMatch(text);
+    if (match != null) {
+      return match.group(1)!.trim();
+    }
 
-    return PestDiagnosisModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      pestName: pestInfo['name'] ?? labelDescription,
-      description: pestInfo['description'] ?? '',
-      confidenceScore: confidence,
-      severityLevel: _calculateSeverity(confidence),
-      treatmentSteps: pestInfo['treatments'] as List<String>? ?? [],
-      preventionTips: pestInfo['prevention'] as List<String>? ?? [],
-      imageUrl: imagePath,
-      diagnosedAt: DateTime.now(),
-    );
+    // コードブロックがない場合はテキストをそのまま返す
+    return text.trim();
   }
 
-  /// 信頼度から重症度を計算
-  String _calculateSeverity(double confidence) {
-    if (confidence >= 0.85) return 'severe';
-    if (confidence >= 0.65) return 'moderate';
-    return 'mild';
+  /// 重症度文字列を正規化する（想定外の値は "mild" にフォールバック）
+  String _normalizeSeverity(String severity) {
+    const validLevels = {'mild', 'moderate', 'severe'};
+    final normalized = severity.toLowerCase().trim();
+    return validLevels.contains(normalized) ? normalized : 'mild';
   }
 
-  /// 病害虫情報データベース（ローカルキャッシュ）
-  Map<String, dynamic> _getPestInfo(String labelDescription) {
-    final label = labelDescription.toLowerCase();
-
-    if (label.contains('aphid') || label.contains('アブラムシ')) {
-      return {
-        'name': 'アブラムシ',
-        'description': '小さな虫が葉や茎に集団で寄生します。植物の汁を吸い、ウイルス病を媒介します。',
-        'treatments': ['殺虫剤（ベニカXファインスプレー）を散布', '水でしっかり洗い流す', '天敵（テントウムシ）を利用する'],
-        'prevention': ['植物を健康に保つ', '反射マルチを利用する', '定期的に葉の裏を確認する'],
-      };
+  /// 重症度スコアから信頼度スコアを推定する
+  ///
+  /// Gemini は確率値を返さないため、severity に基づいて代替値を割り当てる
+  double _severityToConfidence(String severity) {
+    switch (severity) {
+      case 'severe':
+        return 0.90;
+      case 'moderate':
+        return 0.75;
+      case 'mild':
+      default:
+        return 0.60;
     }
+  }
 
-    if (label.contains('mildew') || label.contains('うどんこ')) {
-      return {
-        'name': 'うどんこ病',
-        'description': '白い粉状のカビが葉や茎を覆います。風通しが悪い環境で発生しやすいです。',
-        'treatments': ['発病した葉を除去して処分', '重曹水溶液（1%）を散布', '専用殺菌剤を使用'],
-        'prevention': ['適切な株間を確保する', '過湿を避ける', '窒素肥料の過多に注意する'],
-      };
-    }
-
-    if (label.contains('blight') || label.contains('疫病')) {
-      return {
-        'name': '疫病',
-        'description': '葉や茎に水浸状の斑点が現れ、急速に進展します。梅雨時期に多発します。',
-        'treatments': ['発病した部分を速やかに除去', '殺菌剤（ダコニール）を散布', '被害株は根ごと処分'],
-        'prevention': ['水はね防止のマルチを使用', '過湿を避ける', '排水の良い場所で育てる'],
-      };
-    }
-
-    // デフォルトの情報
-    return {
-      'name': labelDescription,
-      'description': '植物に影響を与える可能性のある問題が検出されました。',
-      'treatments': ['専門家に相談してください', '被害部位を除去してください'],
-      'prevention': ['定期的な観察を心がけてください', '適切な環境管理を行ってください'],
-    };
+  /// ファイルパスの拡張子から画像の MIMEタイプを判定する
+  String _detectMimeType(String filePath) {
+    final lower = filePath.toLowerCase();
+    if (lower.endsWith('.png')) return 'image/png';
+    if (lower.endsWith('.gif')) return 'image/gif';
+    if (lower.endsWith('.webp')) return 'image/webp';
+    if (lower.endsWith('.heic')) return 'image/heic';
+    if (lower.endsWith('.heif')) return 'image/heif';
+    // デフォルトはJPEGとみなす
+    return 'image/jpeg';
   }
 }
 
 /// 病害虫診断専用の例外クラス
 class PestDetectionException implements Exception {
   final String message;
+
+  /// statusCode は Vision API 時代の互換性のために残しているが、
+  /// Gemini API ではHTTPステータスコードを直接取得しないため省略可能
   final int? statusCode;
 
   PestDetectionException({required this.message, this.statusCode});
 
   @override
   String toString() =>
-      'PestDetectionException: $message (status: $statusCode)';
+      'PestDetectionException: $message${statusCode != null ? ' (status: $statusCode)' : ''}';
 }

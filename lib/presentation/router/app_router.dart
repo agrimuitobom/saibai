@@ -60,7 +60,7 @@ class AppRouter {
   }
 }
 
-/// メインナビゲーション（ボトムナビゲーションバー）
+/// メインナビゲーション（ボトムナビゲーションバー 5項目）
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
 
@@ -71,12 +71,12 @@ class MainNavigationShell extends StatefulWidget {
 class _MainNavigationShellState extends State<MainNavigationShell> {
   int _currentIndex = 0;
 
-  /// ナビゲーション先の画面リスト
   final List<Widget> _screens = const [
     HomeScreen(),
     PestCheckerScreen(),
     CropEncyclopediaScreen(),
     BlogScreen(),
+    TaskScreen(),
   ];
 
   @override
@@ -86,29 +86,38 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) =>
+            setState(() => _currentIndex = index),
+        backgroundColor: const Color(0xFFFAF7F2),
+        indicatorColor: const Color(0xFFD4E8B8),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
+            selectedIcon: Icon(Icons.home),
             label: 'ホーム',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bug_report_outlined),
-            activeIcon: Icon(Icons.bug_report),
+          NavigationDestination(
+            icon: Icon(Icons.eco_outlined),
+            selectedIcon: Icon(Icons.eco),
             label: '病害虫',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_outlined),
-            activeIcon: Icon(Icons.menu_book),
+          NavigationDestination(
+            icon: Icon(Icons.local_florist_outlined),
+            selectedIcon: Icon(Icons.local_florist),
             label: '作物図鑑',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            activeIcon: Icon(Icons.article),
+          NavigationDestination(
+            icon: Icon(Icons.dynamic_feed_outlined),
+            selectedIcon: Icon(Icons.dynamic_feed),
             label: 'ブログ',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.checklist_outlined),
+            selectedIcon: Icon(Icons.checklist),
+            label: 'タスク',
           ),
         ],
       ),

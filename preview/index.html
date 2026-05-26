@@ -6,1235 +6,819 @@
 <title>GreenThumb - UI Preview</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --primary: #5A7A3A;
-    --primary-light: #7EA853;
-    --primary-dark: #3D5729;
-    --primary-container: #D4E8B8;
-    --secondary: #8B6340;
-    --secondary-container: #EDD9C4;
-    --background: #F5F0E8;
-    --surface: #FAF7F2;
-    --surface-variant: #EDE8DF;
-    --on-surface: #3D3026;
-    --on-surface-variant: #6B5E4E;
-    --card-border: #D4C9B8;
-    --error: #BA1A1A;
-    --warning: #E07B39;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: #E8E0D4;
-    padding: 32px 16px;
-    min-height: 100vh;
-  }
-  h1 {
-    text-align: center;
-    color: var(--primary-dark);
-    font-size: 28px;
-    margin-bottom: 8px;
-  }
-  .subtitle {
-    text-align: center;
-    color: var(--on-surface-variant);
-    margin-bottom: 32px;
-    font-size: 14px;
-  }
+:root {
+  --green: #5A7A3A; --green-l: #7EA853; --green-d: #3D5729;
+  --green-c: #D4E8B8; --brown: #8B6340; --brown-c: #EDD9C4;
+  --bg: #F5F0E8; --surface: #FAF7F2; --variant: #EDE8DF;
+  --text: #3D3026; --text2: #6B5E4E; --border: #D4C9B8;
+  --divider: #E0D8CC; --error: #BA1A1A; --warn: #E07B39;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:#DDD5C8;padding:24px 16px;min-height:100vh}
 
-  /* タブナビゲーション */
-  .tab-nav {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-  .tab-btn {
-    padding: 10px 20px;
-    border: 2px solid var(--card-border);
-    border-radius: 20px;
-    background: var(--surface);
-    color: var(--on-surface-variant);
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .tab-btn.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-  }
-  .tab-btn:hover { opacity: 0.85; }
+/* ヘッダー */
+.page-header{text-align:center;margin-bottom:24px}
+.page-header h1{font-size:26px;font-weight:700;color:var(--green-d);margin-bottom:4px}
+.page-header p{font-size:13px;color:var(--text2)}
 
-  /* スクリーンコンテナ */
-  .screen-container { display: none; }
-  .screen-container.active { display: flex; justify-content: center; }
+/* タブナビゲーション */
+.tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.tab{padding:9px 18px;border:2px solid var(--border);border-radius:20px;background:var(--surface);
+  color:var(--text2);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
+  transition:all .2s;white-space:nowrap}
+.tab.on{background:var(--green);border-color:var(--green);color:#fff}
 
-  /* iPhoneフレーム */
-  .phone-frame {
-    width: 375px;
-    min-height: 812px;
-    background: var(--background);
-    border-radius: 44px;
-    border: 10px solid #1a1a1a;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 0 0 2px #333;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-  .notch {
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 150px; height: 30px;
-    background: #1a1a1a;
-    border-radius: 0 0 20px 20px;
-    z-index: 10;
-  }
-  .screen-content {
-    flex: 1;
-    overflow-y: auto;
-    padding-top: 44px;
-  }
-  .screen-content::-webkit-scrollbar { width: 4px; }
-  .screen-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+/* スクリーン切り替え */
+.screen{display:none;justify-content:center}
+.screen.on{display:flex}
 
-  /* AppBar */
-  .app-bar {
-    background: var(--surface);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--card-border);
-    position: sticky; top: 0; z-index: 5;
-  }
-  .app-bar-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--on-surface);
-  }
-  .app-bar-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .app-icon-small {
-    width: 36px; height: 36px;
-    background: var(--primary-container);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-  }
-  .avatar-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--primary-container);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    cursor: pointer;
-  }
+/* iPhoneフレーム */
+.phone{width:375px;min-height:760px;background:var(--bg);border-radius:44px;
+  border:10px solid #1a1a1a;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.35),inset 0 0 0 2px #333;
+  display:flex;flex-direction:column;position:relative}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:150px;height:28px;background:#1a1a1a;border-radius:0 0 20px 20px;z-index:10}
+.body{flex:1;overflow-y:auto;padding-top:40px}
+.body::-webkit-scrollbar{width:3px}
+.body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-  /* BottomNav */
-  .bottom-nav {
-    background: var(--surface);
-    border-top: 1px solid var(--card-border);
-    display: flex;
-    padding: 8px 0 20px;
-  }
-  .nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    padding: 4px 0;
-    color: var(--on-surface-variant);
-    font-size: 11px;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-  .nav-item.active { color: var(--primary); }
-  .nav-item .icon { font-size: 22px; }
+/* AppBar */
+.appbar{background:var(--surface);padding:10px 16px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--divider);
+  position:sticky;top:0;z-index:5}
+.appbar-title{font-size:17px;font-weight:700;color:var(--text)}
+.appbar-logo{display:flex;align-items:center;gap:8px}
 
-  /* カード */
-  .card {
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    padding: 16px;
-    margin: 8px 16px;
-    box-shadow: 0 2px 8px rgba(107,94,78,0.08);
-  }
+/* BottomNav (5項目) */
+.bnav{background:var(--surface);border-top:1px solid var(--divider);
+  display:flex;padding:6px 0 18px}
+.bitem{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;color:var(--text2);font-size:10px;font-weight:500;padding:3px 0}
+.bitem.on{color:var(--green)}
+.bitem .bi{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+/* シルエットアイコン SVG */
+.si{fill:currentColor;width:22px;height:22px}
 
-  /* 天気カード */
-  .weather-card {
-    margin: 8px 16px;
-    padding: 20px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #FFB300, #FF8F00);
-    color: white;
-    box-shadow: 0 4px 20px rgba(255,179,0,0.3);
-  }
-  .weather-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .weather-location { display: flex; align-items: center; gap: 4px; font-size: 13px; opacity: 0.85; }
-  .weather-condition { font-size: 18px; font-weight: 700; margin-top: 2px; }
-  .weather-emoji { font-size: 56px; line-height: 1; }
-  .weather-temp { font-size: 52px; font-weight: 700; line-height: 1; }
-  .weather-details { font-size: 13px; opacity: 0.8; margin-left: 12px; }
-  .weather-advice {
-    margin-top: 12px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 13px;
-    display: flex; align-items: center; gap: 8px;
-  }
+/* ユーティリティ */
+.card{background:var(--surface);border-radius:20px;border:1px solid var(--border);
+  padding:16px;margin:8px 16px;box-shadow:0 2px 8px rgba(107,94,78,.07)}
+.section-hd{display:flex;justify-content:space-between;align-items:center;padding:10px 16px 4px}
+.sh-title{font-size:17px;font-weight:700;color:var(--text)}
+.sh-link{font-size:13px;color:var(--green);font-weight:600;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:10px;
+  font-size:12px;font-weight:600}
+.chip-g{background:var(--green-c);color:var(--green-d)}
+.chip-b{background:var(--variant);color:var(--text2)}
+.chip-r{background:rgba(186,26,26,.1);border:1px solid rgba(186,26,26,.2);color:#8B0000}
+.chip-o{background:rgba(224,123,57,.1);border:1px solid rgba(224,123,57,.3);color:#7B3B00}
 
-  /* セクションヘッダー */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 16px 4px;
-  }
-  .section-title { font-size: 18px; font-weight: 700; color: var(--on-surface); }
-  .see-all { font-size: 13px; color: var(--primary); font-weight: 600; cursor: pointer; }
+/* ===== シルエットアバター ===== */
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--green-c);
+  border:1px solid var(--border);overflow:hidden;flex-shrink:0;position:relative}
+.avatar svg{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:30px}
+.avatar-sm{width:36px;height:36px}
+.avatar-lg{width:80px;height:80px}
+.avatar-lg svg{width:50px}
 
-  /* タスクカード */
-  .task-card {
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    padding: 14px 16px;
-    margin: 6px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 2px 6px rgba(107,94,78,0.07);
-  }
-  .task-emoji-box {
-    width: 44px; height: 44px;
-    background: var(--primary-container);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-  .task-info { flex: 1; }
-  .task-title { font-size: 15px; font-weight: 600; color: var(--on-surface); }
-  .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-  .task-date { font-size: 12px; color: var(--on-surface-variant); }
-  .task-category-badge {
-    font-size: 11px;
-    color: var(--on-surface-variant);
-    background: var(--surface-variant);
-    padding: 2px 8px;
-    border-radius: 8px;
-  }
-  .task-check {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: 2px solid var(--card-border);
-    flex-shrink: 0;
-  }
-  .task-check.done {
-    background: var(--primary);
-    border-color: var(--primary);
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 14px;
-  }
+/* ===== スプラッシュ ===== */
+.splash{flex:1;background:linear-gradient(180deg,#7EA853,#4A7A2A);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px}
+.splash-box{width:160px;height:160px;background:rgba(255,255,255,.2);
+  border-radius:32px;border:2px solid rgba(255,255,255,.4);
+  display:flex;align-items:center;justify-content:center}
+.splash-box svg{width:80px;height:80px;fill:white}
+.splash-title{font-size:38px;font-weight:700;color:#fff;letter-spacing:2px}
+.splash-sub{font-size:15px;color:rgba(255,255,255,.85)}
+.loader{width:36px;height:36px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin-top:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* 作物スクロール */
-  .crop-scroll {
-    display: flex;
-    gap: 12px;
-    padding: 4px 16px 12px;
-    overflow-x: auto;
-  }
-  .crop-scroll::-webkit-scrollbar { display: none; }
-  .crop-chip {
-    width: 100px;
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .crop-circle {
-    width: 48px; height: 48px;
-    background: var(--primary-container);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-  }
-  .crop-name { font-size: 12px; font-weight: 600; color: var(--on-surface); }
+/* ===== 天気カード ===== */
+.weather{margin:8px 16px;padding:20px;border-radius:24px;
+  background:linear-gradient(135deg,#FFB300,#FF8F00);color:#fff;
+  box-shadow:0 4px 20px rgba(255,179,0,.3)}
+.w-row{display:flex;justify-content:space-between;align-items:flex-start}
+.w-loc{display:flex;align-items:center;gap:4px;font-size:12px;opacity:.85}
+.w-cond{font-size:17px;font-weight:700;margin-top:2px}
+.w-icon svg{width:56px;height:56px;fill:#fff;opacity:.9}
+.w-temp{font-size:50px;font-weight:700;line-height:1}
+.w-detail{font-size:12px;opacity:.8;margin-left:10px;line-height:1.8}
+.w-advice{margin-top:12px;background:rgba(255,255,255,.2);border-radius:12px;
+  padding:9px 12px;font-size:12px;display:flex;align-items:center;gap:8px}
+.w-advice svg{width:16px;height:16px;fill:#fff;flex-shrink:0}
 
-  /* スプラッシュ */
-  .splash-bg {
-    flex: 1;
-    background: linear-gradient(180deg, #7EA853, #4A7A2A);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 40px;
-  }
-  .splash-icon {
-    width: 160px; height: 160px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 32px;
-    border: 2px solid rgba(255,255,255,0.5);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 80px;
-  }
-  .splash-title { font-size: 40px; font-weight: 700; color: white; letter-spacing: 2px; }
-  .splash-subtitle { font-size: 16px; color: rgba(255,255,255,0.85); }
-  .splash-loader {
-    width: 40px; height: 40px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-top: 24px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ===== タスクカード ===== */
+.task-row{background:var(--surface);border-radius:18px;border:1px solid var(--border);
+  padding:12px 14px;margin:5px 16px;display:flex;align-items:center;gap:11px}
+.task-box{width:42px;height:42px;background:var(--green-c);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.task-box svg{width:22px;height:22px;fill:var(--green)}
+.task-title{font-size:14px;font-weight:600;color:var(--text)}
+.task-meta{display:flex;align-items:center;gap:7px;margin-top:2px}
+.task-date{font-size:11px;color:var(--text2)}
+.task-date.warn{color:var(--warn)}
+.task-check{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);flex-shrink:0}
+.task-check.done{background:var(--green);border-color:var(--green);
+  display:flex;align-items:center;justify-content:center}
+.task-check.done svg{width:14px;fill:#fff}
 
-  /* 病害虫チェッカー */
-  .pest-hint {
-    background: var(--primary-container);
-    border-radius: 20px;
-    padding: 16px;
-    margin: 12px 16px;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .pest-hint-icon { font-size: 28px; }
-  .pest-hint-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); }
-  .pest-hint-desc { font-size: 12px; color: var(--primary-dark); margin-top: 4px; }
-  .action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    border-radius: 20px;
-    padding: 16px;
-    margin: 8px 16px;
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-  }
-  .action-btn.green { background: var(--primary); box-shadow: 0 4px 16px rgba(90,122,58,0.3); }
-  .action-btn.brown { background: var(--secondary); box-shadow: 0 4px 16px rgba(139,99,64,0.3); }
-  .info-btn {
-    width: calc(100% - 32px);
-    margin: 6px 16px;
-    padding: 18px 20px;
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    background: var(--surface);
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--on-surface);
-    cursor: pointer;
-  }
-  .info-btn.active {
-    background: var(--primary-container);
-    border: 2px solid var(--primary);
-    color: var(--primary-dark);
-    box-shadow: 0 2px 12px rgba(90,122,58,0.15);
-  }
+/* ===== 作物チップ ===== */
+.crop-row{display:flex;gap:12px;padding:4px 16px 14px;overflow-x:auto}
+.crop-row::-webkit-scrollbar{display:none}
+.crop-chip{width:96px;background:var(--surface);border-radius:18px;
+  border:1px solid var(--border);padding:12px;display:flex;
+  flex-direction:column;align-items:center;gap:7px;flex-shrink:0}
+.crop-circle{width:50px;height:50px;background:var(--green-c);border-radius:50%;
+  display:flex;align-items:center;justify-content:center}
+.crop-circle svg{width:28px;height:28px;fill:var(--green)}
+.crop-name{font-size:12px;font-weight:600;color:var(--text)}
 
-  /* 作物図鑑グリッド */
-  .search-bar {
-    margin: 12px 16px;
-    background: var(--surface);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--on-surface-variant);
-    font-size: 14px;
-  }
-  .crop-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    padding: 4px 16px 16px;
-  }
-  .crop-grid-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-  }
-  .crop-grid-circle {
-    width: 84px; height: 84px;
-    background: var(--primary-container);
-    border-radius: 50%;
-    border: 1.5px solid var(--card-border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
-    box-shadow: 0 2px 8px rgba(107,94,78,0.1);
-    transition: transform 0.15s;
-  }
-  .crop-grid-circle:hover { transform: scale(1.05); }
-  .crop-grid-name { font-size: 12px; font-weight: 600; color: var(--on-surface); }
+/* ===== 病害虫チェッカー ===== */
+.pest-hint{background:var(--green-c);border-radius:18px;padding:15px;
+  margin:12px 16px;display:flex;gap:12px}
+.ph-icon svg{width:28px;height:28px;fill:var(--green-d)}
+.ph-title{font-size:13px;font-weight:700;color:var(--green-d)}
+.ph-desc{font-size:11px;color:var(--green-d);margin-top:3px;line-height:1.5}
+.act-btn{display:flex;align-items:center;justify-content:center;gap:10px;
+  border-radius:18px;padding:15px;margin:7px 16px;font-size:15px;font-weight:600;
+  color:#fff;cursor:pointer}
+.act-g{background:var(--green);box-shadow:0 4px 14px rgba(90,122,58,.3)}
+.act-b{background:var(--brown);box-shadow:0 4px 14px rgba(139,99,64,.3)}
+.act-btn svg{width:22px;height:22px;fill:#fff}
+.info-btn{width:calc(100% - 32px);margin:5px 16px;padding:17px;border-radius:18px;
+  border:1px solid var(--border);background:var(--surface);text-align:center;
+  font-size:17px;font-weight:600;color:var(--text);cursor:pointer}
+.info-btn.on{background:var(--green-c);border:2px solid var(--green);color:var(--green-d);
+  box-shadow:0 2px 10px rgba(90,122,58,.15)}
 
-  /* ブログ */
-  .blog-card {
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    margin: 8px 16px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(107,94,78,0.07);
-  }
-  .blog-header {
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .blog-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: var(--primary-container);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--primary-dark);
-    flex-shrink: 0;
-  }
-  .blog-author { font-size: 14px; font-weight: 600; color: var(--on-surface); }
-  .blog-time { font-size: 12px; color: var(--on-surface-variant); }
-  .blog-image {
-    height: 160px;
-    margin: 0 16px;
-    background: var(--primary-container);
-    border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 48px;
-    color: var(--primary);
-  }
-  .blog-body { padding: 12px 16px; }
-  .blog-title { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-bottom: 6px; }
-  .blog-content { font-size: 13px; color: var(--on-surface-variant); line-height: 1.6; }
-  .blog-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-  .blog-tag {
-    font-size: 11px;
-    background: var(--primary-container);
-    color: var(--primary-dark);
-    padding: 3px 8px;
-    border-radius: 8px;
-    font-weight: 600;
-  }
-  .blog-footer {
-    padding: 10px 16px;
-    border-top: 1px solid var(--card-border);
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
-  .blog-like { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--on-surface-variant); }
-  .fab {
-    position: fixed;
-    bottom: 100px;
-    right: calc(50% - 375px/2 + 24px);
-    width: 56px; height: 56px;
-    background: var(--primary);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    color: white;
-    box-shadow: 0 4px 16px rgba(90,122,58,0.4);
-    cursor: pointer;
-  }
+/* ===== 作物図鑑 ===== */
+.search{margin:12px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:12px 16px;display:flex;align-items:center;gap:9px;
+  color:var(--text2);font-size:14px}
+.search svg{width:18px;height:18px;fill:var(--text2);flex-shrink:0}
+.crop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:4px 16px 16px}
+.cg-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.cg-circle{width:84px;height:84px;background:var(--green-c);border-radius:50%;
+  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(107,94,78,.1);transition:transform .15s}
+.cg-circle:hover{transform:scale(1.05)}
+.cg-circle svg{width:44px;height:44px;fill:var(--green)}
+.cg-name{font-size:12px;font-weight:600;color:var(--text);text-align:center}
 
-  /* タスク入力フォーム */
-  .form-field {
-    background: var(--surface);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 14px 16px;
-    font-size: 14px;
-    color: var(--on-surface-variant);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 4px 0;
-  }
-  .form-label { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 2px; }
-  .add-btn {
-    background: var(--primary);
-    color: white;
-    border-radius: 16px;
-    padding: 16px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 12px;
-    cursor: pointer;
-  }
+/* ===== ブログ（Twitter風） ===== */
+.tweet{padding:14px 16px;border-bottom:1px solid var(--divider);
+  display:flex;gap:12px;cursor:pointer}
+.tweet:hover{background:rgba(0,0,0,.02)}
+.tweet-body{flex:1;min-width:0}
+.tweet-hd{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.tweet-name{font-size:14px;font-weight:700;color:var(--text)}
+.tweet-time{font-size:12px;color:var(--text2);margin-left:auto}
+.tweet-text{font-size:14px;color:var(--text);line-height:1.6;margin-top:5px}
+.tweet-img{width:100%;height:160px;background:var(--green-c);border-radius:16px;
+  margin-top:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tweet-img svg{width:48px;height:48px;fill:var(--green);opacity:.6}
+.tweet-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.tweet-tag{font-size:13px;color:var(--green);font-weight:500}
+.tweet-actions{display:flex;align-items:center;margin-top:10px;gap:0}
+.ta{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);
+  padding:4px 8px;border-radius:8px;cursor:pointer;min-width:60px}
+.ta:hover{color:var(--green);background:var(--green-c)}
+.ta svg{width:17px;height:17px;fill:currentColor}
+.ta.liked{color:var(--error)}
+.ta-spacer{flex:1}
+/* 投稿ボタン（FAB） */
+.fab{position:absolute;bottom:76px;right:16px;width:54px;height:54px;
+  background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(90,122,58,.4);cursor:pointer;z-index:5}
+.fab svg{width:24px;height:24px;fill:#fff}
 
-  /* 設定 */
-  .settings-card {
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    margin: 8px 16px;
-    overflow: hidden;
-  }
-  .settings-row {
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--card-border);
-  }
-  .settings-row:last-child { border-bottom: none; }
-  .settings-icon {
-    width: 44px; height: 44px;
-    background: var(--primary-container);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-  }
-  .settings-text { flex: 1; }
-  .settings-title { font-size: 15px; font-weight: 600; color: var(--on-surface); }
-  .settings-sub { font-size: 12px; color: var(--on-surface-variant); }
-  .toggle {
-    width: 52px; height: 30px;
-    background: var(--primary);
-    border-radius: 15px;
-    position: relative;
-    cursor: pointer;
-  }
-  .toggle::after {
-    content: '';
-    position: absolute;
-    top: 3px; right: 3px;
-    width: 24px; height: 24px;
-    background: white;
-    border-radius: 50%;
-  }
-  .toggle.off { background: var(--card-border); }
-  .toggle.off::after { right: auto; left: 3px; }
-  .chip-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 16px;
-  }
-  .chip-option {
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    border: 1px solid var(--card-border);
-    background: var(--surface-variant);
-    color: var(--on-surface);
-    cursor: pointer;
-  }
-  .chip-option.selected {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-  }
+/* ===== プロフィール ===== */
+.prof-banner{height:100px;background:linear-gradient(135deg,var(--green-c),var(--variant))}
+.prof-info{padding:0 20px 18px;display:flex;gap:14px;align-items:flex-end;margin-top:-38px}
+.prof-av{width:76px;height:76px;border-radius:50%;background:var(--brown);
+  border:3px solid var(--surface);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);flex-shrink:0;overflow:hidden;position:relative}
+.prof-av svg{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);
+  width:52px;fill:#fff}
+.prof-name{font-size:20px;font-weight:700;color:var(--text);margin-top:40px}
+.prof-bio{font-size:12px;color:var(--text2);margin-top:3px}
+.settings-btn{position:absolute;top:50px;right:14px;width:38px;height:38px;
+  background:var(--brown);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer}
+.settings-btn svg{width:18px;fill:#fff}
+.my-post{background:var(--surface);border-radius:18px;border:1px solid var(--border);
+  padding:13px 15px;margin:5px 16px}
+.mp-title{font-size:13px;font-weight:600;color:var(--text)}
+.mp-content{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5}
+.mp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.mp-date{font-size:11px;color:var(--text2)}
+.mp-counts{font-size:11px;color:var(--text2);display:flex;gap:10px;align-items:center}
+.mp-counts svg{width:13px;fill:var(--text2)}
 
-  /* プロフィール */
-  .profile-header {
-    background: var(--surface);
-    position: relative;
-  }
-  .profile-banner {
-    height: 120px;
-    background: linear-gradient(135deg, var(--primary-container), var(--surface-variant));
-  }
-  .profile-info {
-    padding: 0 24px 20px;
-    display: flex;
-    gap: 16px;
-    align-items: flex-end;
-    margin-top: -40px;
-  }
-  .profile-avatar {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: var(--secondary);
-    border: 3px solid var(--surface);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    flex-shrink: 0;
-  }
-  .profile-name { font-size: 22px; font-weight: 700; color: var(--on-surface); }
-  .profile-bio { font-size: 12px; color: var(--on-surface-variant); margin-top: 4px; }
-  .settings-fab {
-    position: absolute;
-    top: 12px; right: 16px;
-    width: 40px; height: 40px;
-    background: var(--secondary);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .my-post-item {
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    padding: 14px 16px;
-    margin: 6px 16px;
-  }
-  .my-post-title { font-size: 14px; font-weight: 600; color: var(--on-surface); }
-  .my-post-content { font-size: 12px; color: var(--on-surface-variant); margin-top: 4px; line-height: 1.5; }
-  .my-post-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-  .post-badge {
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-weight: 600;
-  }
-  .post-badge.public { background: var(--primary-container); color: var(--primary-dark); }
-  .post-badge.private { background: var(--surface-variant); color: var(--on-surface-variant); }
+/* ===== タスク入力 ===== */
+.form-section{background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--divider)}
+.form-label{font-size:11px;color:var(--text2);margin-bottom:3px;font-weight:600}
+.form-field{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:12px 14px;font-size:14px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.form-field svg{width:17px;height:17px;fill:var(--text2);flex-shrink:0}
+.add-btn{background:var(--green);color:#fff;border-radius:14px;padding:14px;
+  text-align:center;font-size:15px;font-weight:600;margin-top:11px;cursor:pointer}
 
-  /* 作物詳細 */
-  .detail-hero {
-    height: 200px;
-    background: var(--primary-container);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 96px;
-  }
-  .section-badge {
-    display: inline-block;
-    background: var(--primary-container);
-    color: var(--primary-dark);
-    padding: 5px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  .detail-section {
-    background: var(--surface);
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    padding: 16px;
-    margin: 8px 16px;
-  }
-  .difficulty-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    background: rgba(76,175,80,0.15);
-    color: #2E7D32;
-    border: 1px solid rgba(76,175,80,0.3);
-    margin-right: 8px;
-  }
-  .pest-chip {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 16px;
-    font-size: 12px;
-    margin: 3px;
-    background: rgba(186,26,26,0.08);
-    border: 1px solid rgba(186,26,26,0.2);
-    color: #8B0000;
-  }
-  .disease-chip {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 16px;
-    font-size: 12px;
-    margin: 3px;
-    background: rgba(224,123,57,0.08);
-    border: 1px solid rgba(224,123,57,0.3);
-    color: #7B3B00;
-  }
-  .period-badge {
-    background: var(--secondary-container);
-    color: var(--secondary);
-    padding: 5px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
+/* ===== 設定 ===== */
+.scard{background:var(--surface);border-radius:20px;border:1px solid var(--border);
+  margin:8px 16px;overflow:hidden}
+.srow{padding:14px 16px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--divider)}
+.srow:last-child{border-bottom:none}
+.sicon{width:42px;height:42px;background:var(--green-c);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sicon svg{width:22px;fill:var(--green)}
+.stitle{font-size:14px;font-weight:600;color:var(--text)}
+.ssub{font-size:11px;color:var(--text2)}
+.toggle{width:50px;height:28px;background:var(--green);border-radius:14px;position:relative;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:3px;right:3px;width:22px;height:22px;
+  background:#fff;border-radius:50%}
+.toggle.off{background:var(--border)}
+.toggle.off::after{right:auto;left:3px}
+.chip-group{display:flex;flex-wrap:wrap;gap:9px;padding:14px 16px}
+.copt{padding:9px 14px;border-radius:12px;font-size:13px;font-weight:600;
+  border:1px solid var(--border);background:var(--variant);color:var(--text);cursor:pointer}
+.copt.on{background:var(--green);border-color:var(--green);color:#fff}
 
-  /* スクリーン名ラベル */
-  .screen-label {
-    text-align: center;
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--on-surface-variant);
-    font-weight: 600;
-  }
+/* ===== 作物詳細 ===== */
+.det-hero{height:190px;background:var(--green-c);display:flex;align-items:center;justify-content:center}
+.det-hero svg{width:120px;height:120px;fill:var(--green)}
+.det-sec{background:var(--surface);border-radius:20px;border:1px solid var(--border);
+  padding:15px;margin:7px 16px}
+.sec-badge{display:inline-block;background:var(--green-c);color:var(--green-d);
+  padding:4px 11px;border-radius:9px;font-size:12px;font-weight:600;margin-bottom:9px}
+.diff-badge{display:inline-block;padding:3px 9px;border-radius:9px;font-size:11px;font-weight:600;
+  background:rgba(76,175,80,.13);color:#2E7D32;border:1px solid rgba(76,175,80,.3)}
+.period-badge{display:inline-flex;align-items:center;gap:4px;background:var(--brown-c);
+  color:var(--brown);padding:4px 11px;border-radius:11px;font-size:12px;font-weight:600}
+
+/* ラベル */
+.screen-label{text-align:center;margin-top:14px;font-size:13px;color:var(--text2);font-weight:600}
+
+/* ===== SVGアイコン定義 ===== */
+/* (インラインで使用) */
 </style>
 </head>
 <body>
 
-<h1>🌱 GreenThumb</h1>
-<p class="subtitle">家庭菜園アプリ — UIプレビュー</p>
-
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="showScreen('splash')">スプラッシュ</button>
-  <button class="tab-btn" onclick="showScreen('home')">ホーム</button>
-  <button class="tab-btn" onclick="showScreen('pest')">病害虫チェッカー</button>
-  <button class="tab-btn" onclick="showScreen('encyclopedia')">作物図鑑</button>
-  <button class="tab-btn" onclick="showScreen('detail')">作物詳細</button>
-  <button class="tab-btn" onclick="showScreen('blog')">ブログ</button>
-  <button class="tab-btn" onclick="showScreen('profile')">プロフィール</button>
-  <button class="tab-btn" onclick="showScreen('task')">タスク</button>
-  <button class="tab-btn" onclick="showScreen('settings')">設定</button>
+<div class="page-header">
+  <h1>🌱 GreenThumb</h1>
+  <p>家庭菜園アプリ — UIプレビュー（シルエットアイコン版）</p>
 </div>
 
-<!-- スプラッシュ画面 -->
-<div class="screen-container active" id="screen-splash">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content" style="display:flex;flex-direction:column;padding-top:0;">
-        <div class="splash-bg">
-          <div class="splash-icon">🌿</div>
-          <div class="splash-title">GreenThumb</div>
-          <div class="splash-subtitle">家庭菜園をもっと楽しく</div>
-          <div class="splash-loader"></div>
+<div class="tabs">
+  <button class="tab on" onclick="show('splash',this)">スプラッシュ</button>
+  <button class="tab" onclick="show('home',this)">ホーム</button>
+  <button class="tab" onclick="show('pest',this)">病害虫チェッカー</button>
+  <button class="tab" onclick="show('enc',this)">作物図鑑</button>
+  <button class="tab" onclick="show('det',this)">作物詳細</button>
+  <button class="tab" onclick="show('blog',this)">ブログ</button>
+  <button class="tab" onclick="show('prof',this)">プロフィール</button>
+  <button class="tab" onclick="show('task',this)">タスク</button>
+  <button class="tab" onclick="show('set',this)">設定</button>
+</div>
+
+<!-- ===================== SPLASH ===================== -->
+<div class="screen on" id="s-splash">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body" style="padding-top:0;display:flex;flex-direction:column;">
+    <div class="splash">
+      <div class="splash-box">
+        <!-- 葉っぱシルエット -->
+        <svg viewBox="0 0 80 80"><path d="M40 8C22 8 8 22 8 40c0 14 8 26 20 32 4-10 4-22 0-32 8 8 14 20 12 32 0 0 0 0 0 0C52 68 64 55 64 40 64 22 58 8 40 8z"/></svg>
+      </div>
+      <div class="splash-title">GreenThumb</div>
+      <div class="splash-sub">家庭菜園をもっと楽しく</div>
+      <div class="loader"></div>
+    </div>
+  </div>
+</div>
+<div class="screen-label">スプラッシュ画面</div>
+</div>
+</div>
+
+<!-- ===================== HOME ===================== -->
+<div class="screen" id="s-home">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="appbar">
+      <div class="appbar-logo">
+        <div style="width:34px;height:34px;background:var(--green-c);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" style="width:20px;fill:var(--green)"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg>
+        </div>
+        <span class="appbar-title" style="color:var(--green)">GreenThumb</span>
+      </div>
+      <div class="avatar avatar-sm">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+    </div>
+
+    <!-- 天気 -->
+    <div class="weather">
+      <div class="w-row">
+        <div>
+          <div class="w-loc">
+            <svg viewBox="0 0 24 24" style="width:14px;fill:#fff;opacity:.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            東京
+          </div>
+          <div class="w-cond">晴れ</div>
+        </div>
+        <!-- 太陽シルエット -->
+        <div class="w-icon">
+          <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="12"/>
+          <path d="M32 4v8M32 52v8M4 32h8M52 32h8M12.7 12.7l5.6 5.6M45.7 45.7l5.6 5.6M12.7 51.3l5.6-5.6M45.7 18.3l5.6-5.6" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-end;margin-top:10px">
+        <div class="w-temp">26°</div>
+        <div class="w-detail">体感 24°<br>湿度 58%<br>風速 3.2m/s</div>
+      </div>
+      <div class="w-advice">
+        <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg>
+        菜園日和です！定植や収穫に最適です。
+      </div>
+    </div>
+
+    <!-- タスク -->
+    <div class="section-hd"><span class="sh-title">タスク</span><span class="sh-link">すべて見る</span></div>
+    <div style="margin:0 16px 6px;"><span class="chip chip-g">今日のタスク: 1件</span></div>
+
+    <div class="task-row">
+      <div class="task-box"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg></div>
+      <div style="flex:1">
+        <div class="task-title">トマトに水やり</div>
+        <div class="task-meta"><span class="task-date warn">⏱ 今日</span><span class="chip chip-b" style="padding:2px 8px;font-size:11px">水やり</span></div>
+      </div>
+      <div class="task-check"></div>
+    </div>
+    <div class="task-row">
+      <div class="task-box"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>
+      <div style="flex:1">
+        <div class="task-title">バジルの追肥</div>
+        <div class="task-meta"><span class="task-date">⏱ 2日後</span><span class="chip chip-b" style="padding:2px 8px;font-size:11px">施肥</span></div>
+      </div>
+      <div class="task-check"></div>
+    </div>
+    <div class="task-row">
+      <div class="task-box"><svg viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm7 14l7-7-1.4-1.4L12 14.2l-3.6-3.6L7 12l5 5z"/></svg></div>
+      <div style="flex:1">
+        <div class="task-title">キュウリの収穫</div>
+        <div class="task-meta"><span class="task-date">⏱ 明日</span><span class="chip chip-b" style="padding:2px 8px;font-size:11px">収穫</span></div>
+      </div>
+      <div class="task-check done"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+    </div>
+
+    <!-- 育てているもの -->
+    <div class="section-hd" style="margin-top:6px"><span class="sh-title">育てているもの</span><span class="sh-link">図鑑を見る</span></div>
+    <div class="crop-row">
+      <div class="crop-chip"><div class="crop-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v4M12 16v4M4 12h4M16 12h4" stroke="#3D5729" stroke-width="1.5"/></svg></div><div class="crop-name">トマト</div></div>
+      <div class="crop-chip"><div class="crop-circle"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div><div class="crop-name">バジル</div></div>
+      <div class="crop-chip"><div class="crop-circle"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="4" ry="8" transform="rotate(-30 12 12)"/><path d="M8 4C6 8 6 16 8 20" stroke="#3D5729" stroke-width="1.5" fill="none"/></svg></div><div class="crop-name">キュウリ</div></div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav">
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05zM12 2a9.96 9.96 0 0 1 4 .83V2h1v3.29A10 10 0 1 1 2 12h2a8 8 0 1 0 8-8V2z"/></svg></div>病害虫</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h14v2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
+  </div>
+</div>
+<div class="screen-label">ホーム画面</div>
+</div>
+</div>
+
+<!-- ===================== PEST ===================== -->
+<div class="screen" id="s-pest">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="appbar"><span class="appbar-title">病害虫チェッカー</span></div>
+    <div class="pest-hint">
+      <div class="ph-icon"><svg viewBox="0 0 24 24"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg></div>
+      <div><div class="ph-title">植物の写真を撮ってください</div><div class="ph-desc">病気や病害虫が疑われる葉・茎・実の部分を撮影するとGemini AIが正確に診断します</div></div>
+    </div>
+    <!-- Gemini バッジ -->
+    <div style="margin:4px 16px 10px;display:flex;align-items:center;gap:8px;padding:9px 14px;background:#E8F0FE;border-radius:14px;border:1px solid #C5D5F5">
+      <svg viewBox="0 0 24 24" style="width:18px;fill:#4285F4;flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <span style="font-size:12px;font-weight:600;color:#1a73e8">Gemini 1.5 Flash でAI診断</span>
+    </div>
+    <div class="act-btn act-g">
+      <svg viewBox="0 0 24 24"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      カメラで撮影
+    </div>
+    <div class="act-btn act-b">
+      <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+      アルバムから選択
+    </div>
+    <div style="padding:14px 16px 8px;font-size:16px;font-weight:700;color:var(--text)">病害虫について学ぶ</div>
+    <div class="info-btn on">病害虫の説明</div>
+    <div class="info-btn">対処法</div>
+    <div class="info-btn">対策・予防</div>
+    <div class="card" style="margin-top:8px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:11px">主な病害虫の種類</div>
+      <div style="display:flex;gap:10px;padding:6px 0;align-items:flex-start">
+        <svg viewBox="0 0 24 24" style="width:22px;fill:var(--green);flex-shrink:0;margin-top:1px"><path d="M15.5 2C13 2 11 4 11 6.5c0 .5.1 1 .3 1.5H6C4.9 8 4 8.9 4 10v2c0 1.1.9 2 2 2h.5l1.5 6h8l1.5-6H18c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2h-1.3c.2-.5.3-1 .3-1.5C17 4 15.5 2 15.5 2z"/></svg>
+        <div><div style="font-weight:600;font-size:13px">アブラムシ</div><div style="font-size:11px;color:var(--text2);margin-top:1px">葉や茎に集団で寄生し、植物の汁を吸います。</div></div>
+      </div>
+      <div style="display:flex;gap:10px;padding:6px 0;align-items:flex-start">
+        <svg viewBox="0 0 24 24" style="width:22px;fill:var(--green);flex-shrink:0;margin-top:1px"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+        <div><div style="font-weight:600;font-size:13px">うどんこ病</div><div style="font-size:11px;color:var(--text2);margin-top:1px">白い粉状のカビが葉に広がります。風通しが原因に。</div></div>
+      </div>
+      <div style="display:flex;gap:10px;padding:6px 0;align-items:flex-start">
+        <svg viewBox="0 0 24 24" style="width:22px;fill:var(--green);flex-shrink:0;margin-top:1px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div><div style="font-weight:600;font-size:13px">疫病</div><div style="font-size:11px;color:var(--text2);margin-top:1px">梅雨時期に多発。葉・茎に水浸状の斑点が現れます。</div></div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05zM12 2a9.96 9.96 0 0 1 4 .83V2h1v3.29A10 10 0 1 1 2 12h2a8 8 0 1 0 8-8V2z"/></svg></div>病害虫</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
+  </div>
+</div>
+<div class="screen-label">病害虫チェッカー（Gemini AI）</div>
+</div>
+</div>
+
+<!-- ===================== ENCYCLOPEDIA ===================== -->
+<div class="screen" id="s-enc">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="appbar"><span class="appbar-title">作物図鑑</span></div>
+    <div class="search"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>作物名で検索...</div>
+    <div class="crop-grid">
+      <!-- トマト -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M10 3h4" stroke="#3D5729" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></div><div class="cg-name">トマト</div></div>
+      <!-- バジル -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div><div class="cg-name">バジル</div></div>
+      <!-- キュウリ -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="5" ry="9" transform="rotate(-30 12 12)"/></svg></div><div class="cg-name">キュウリ</div></div>
+      <!-- イチゴ -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><path d="M12 2c-1 0-5 3-5 9 0 4.4 2.2 7.5 5 8 2.8-.5 5-3.6 5-8 0-6-4-9-5-9z"/></svg></div><div class="cg-name">イチゴ</div></div>
+      <!-- レタス -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><path d="M12 3C8 3 5 7 5 12s2.5 8 7 9c4.5-1 7-4 7-9 0-5-3-9-7-9z"/><path d="M9 10c1-2 4-3 5-2" stroke="#3D5729" stroke-width="1" fill="none"/></svg></div><div class="cg-name">レタス</div></div>
+      <!-- ほうれん草 -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><path d="M7 20l2-8c0 0 2-8 6-8s6 8 6 8l2 8H7z"/><path d="M12 4v16" stroke="#3D5729" stroke-width="1" fill="none"/></svg></div><div class="cg-name">ほうれん草</div></div>
+      <!-- ピーマン -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><path d="M12 4V2M11 4c-3 1-5 4-5 8 0 4 2.5 7 6 7s6-3 6-7c0-4-2-7-5-8h-2z"/></svg></div><div class="cg-name">ピーマン</div></div>
+      <!-- ナス -->
+      <div class="cg-item"><div class="cg-circle"><svg viewBox="0 0 24 24"><path d="M12 3c-1 0-2 1-2 2 0 0-5 2-5 8s3 9 7 9 7-3 7-9-5-8-5-8c0-1-1-2-2-2z"/></svg></div><div class="cg-name">ナス</div></div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05zM12 2a9.96 9.96 0 0 1 4 .83V2h1v3.29A10 10 0 1 1 2 12h2a8 8 0 1 0 8-8V2z"/></svg></div>病害虫</div>
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
+  </div>
+</div>
+<div class="screen-label">作物図鑑</div>
+</div>
+</div>
+
+<!-- ===================== DETAIL ===================== -->
+<div class="screen" id="s-det">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="det-hero" style="padding-top:28px">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M10 3h4" stroke="#3D5729" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </div>
+    <div class="det-sec">
+      <div class="sec-badge">野菜の名前</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px">
+        <span style="font-size:24px;font-weight:700">トマト</span>
+        <span style="font-size:14px;color:var(--text2)">Tomato</span>
+      </div>
+      <span class="diff-badge">中級者向け</span>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="chip chip-b">🏠 ベランダ</span>
+        <span class="chip chip-b">🌾 畑・庭</span>
+      </div>
+      <div style="margin-top:9px;font-size:13px;color:var(--text2);line-height:1.6">家庭菜園で最も人気の野菜。日当たりと水はけの良い場所で育てましょう。</div>
+    </div>
+    <div class="det-sec">
+      <div class="sec-badge">栽培方法や栽培期間</div>
+      <span class="period-badge" style="margin-bottom:11px">
+        <svg viewBox="0 0 24 24" style="width:14px;fill:var(--brown)"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+        苗植えから約60〜80日で収穫
+      </span>
+      <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:10px">支柱を立てて誘引しながら育てます。1本仕立てで実が大きく育ちます。</div>
+      <div style="font-weight:600;font-size:12px;margin-bottom:5px">栽培適期</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="chip chip-b">🌸 春</span><span class="chip chip-b">☀️ 夏</span>
+      </div>
+      <div style="font-size:13px;color:var(--text);display:flex;align-items:center;gap:5px">
+        <svg viewBox="0 0 24 24" style="width:16px;fill:#42A5F5"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+        水やり: 毎日
+      </div>
+    </div>
+    <div class="det-sec">
+      <div class="sec-badge">主な病気や病害虫</div>
+      <div style="font-weight:600;font-size:12px;margin-bottom:5px">主な病害虫</div>
+      <div>
+        <span class="chip-r" style="display:inline-block;padding:4px 10px;border-radius:14px;font-size:12px;margin:3px">アブラムシ</span>
+        <span class="chip-r" style="display:inline-block;padding:4px 10px;border-radius:14px;font-size:12px;margin:3px">ハダニ</span>
+        <span class="chip-r" style="display:inline-block;padding:4px 10px;border-radius:14px;font-size:12px;margin:3px">コナジラミ</span>
+      </div>
+      <div style="font-weight:600;font-size:12px;margin:9px 0 5px">主な病気</div>
+      <div>
+        <span class="chip-o" style="display:inline-block;padding:4px 10px;border-radius:14px;font-size:12px;margin:3px">疫病</span>
+        <span class="chip-o" style="display:inline-block;padding:4px 10px;border-radius:14px;font-size:12px;margin:3px">青枯れ病</span>
+        <span class="chip-o" style="display:inline-block;padding:4px 10px;border-radius:14px;font-size:12px;margin:3px">モザイク病</span>
+      </div>
+      <div style="background:var(--green);color:#fff;border-radius:14px;padding:13px;text-align:center;margin-top:13px;font-weight:600;font-size:14px;cursor:pointer">
+        Gemini AIで病害虫を診断する
+      </div>
+    </div>
+    <div style="height:24px"></div>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05zM12 2a9.96 9.96 0 0 1 4 .83V2h1v3.29A10 10 0 1 1 2 12h2a8 8 0 1 0 8-8V2z"/></svg></div>病害虫</div>
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
+  </div>
+</div>
+<div class="screen-label">作物詳細（トマト）</div>
+</div>
+</div>
+
+<!-- ===================== BLOG ===================== -->
+<div class="screen" id="s-blog">
+<div>
+<div class="phone" style="position:relative">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="appbar">
+      <div class="appbar-logo">
+        <svg viewBox="0 0 24 24" style="width:22px;fill:var(--green)"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg>
+        <span class="appbar-title">ブログ</span>
+      </div>
+      <div class="avatar avatar-sm"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="var(--green)"/></svg></div>
+    </div>
+
+    <!-- ツイート1 -->
+    <div class="tweet">
+      <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="var(--green)"/></svg></div>
+      <div class="tweet-body">
+        <div class="tweet-hd">
+          <span class="tweet-name">田中 花子</span>
+          <span class="tweet-time">2時間前</span>
+        </div>
+        <div class="tweet-text">ベランダで育てているトマトがついに赤くなってきました🍅 毎日水やりをした甲斐がありました。あと3日くらいで収穫できそうです！</div>
+        <!-- 画像添付 -->
+        <div class="tweet-img">
+          <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        </div>
+        <div class="tweet-tags"><span class="tweet-tag">#トマト</span><span class="tweet-tag">#収穫前</span><span class="tweet-tag">#ベランダ菜園</span></div>
+        <div class="tweet-actions">
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg> 3</div>
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></div>
+          <div class="ta liked"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 12</div>
+          <div class="ta-spacer"></div>
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></div>
         </div>
       </div>
     </div>
-    <div class="screen-label">スプラッシュ画面</div>
-  </div>
-</div>
 
-<!-- ホーム画面 -->
-<div class="screen-container" id="screen-home">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="app-bar">
-          <div class="app-bar-logo">
-            <div class="app-icon-small">🌿</div>
-            <span class="app-bar-title" style="color:var(--primary);">GreenThumb</span>
-          </div>
-          <div class="avatar-btn">👤</div>
+    <!-- ツイート2 -->
+    <div class="tweet">
+      <div class="avatar" style="background:var(--brown-c)"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="var(--brown)"/></svg></div>
+      <div class="tweet-body">
+        <div class="tweet-hd">
+          <span class="tweet-name">鈴木 太郎</span>
+          <span class="tweet-time">1日前</span>
         </div>
-
-        <!-- 天気ウィジェット -->
-        <div class="weather-card">
-          <div class="weather-top">
-            <div>
-              <div class="weather-location">📍 東京</div>
-              <div class="weather-condition">晴れ</div>
-            </div>
-            <div class="weather-emoji">☀️</div>
-          </div>
-          <div style="display:flex;align-items:flex-end;margin-top:12px;">
-            <div class="weather-temp">26°</div>
-            <div class="weather-details">
-              <div>体感 24°</div>
-              <div>湿度 58%</div>
-              <div>風速 3.2m/s</div>
-            </div>
-          </div>
-          <div class="weather-advice">
-            🌾 菜園日和です！定植や収穫に最適です。
-          </div>
+        <div class="tweet-text">バジルにアブラムシがついてしまいました😢 ペットボトルスプレーで水洗いする方法を試してみます。効果があるといいな。</div>
+        <div class="tweet-tags"><span class="tweet-tag">#病害虫対策</span><span class="tweet-tag">#バジル</span></div>
+        <div class="tweet-actions">
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg> 5</div>
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></div>
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg> 8</div>
+          <div class="ta-spacer"></div>
+          <div class="ta"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></div>
         </div>
-
-        <!-- タスクセクション -->
-        <div class="section-header">
-          <span class="section-title">タスク</span>
-          <span class="see-all">すべて見る</span>
-        </div>
-        <div style="margin: 0 16px 6px; display:inline-block; background:var(--primary-container); padding:5px 12px; border-radius:12px; font-size:13px; font-weight:600; color:var(--primary-dark);">今日のタスク: 1件</div>
-        <div class="task-card">
-          <div class="task-emoji-box">💧</div>
-          <div class="task-info">
-            <div class="task-title">トマトに水やり</div>
-            <div class="task-meta">
-              <span class="task-date">⏱ 今日</span>
-              <span class="task-category-badge">水やり</span>
-            </div>
-          </div>
-          <div class="task-check"></div>
-        </div>
-        <div class="task-card">
-          <div class="task-emoji-box">🌱</div>
-          <div class="task-info">
-            <div class="task-title">バジルの追肥</div>
-            <div class="task-meta">
-              <span class="task-date">⏱ 2日後</span>
-              <span class="task-category-badge">施肥</span>
-            </div>
-          </div>
-          <div class="task-check"></div>
-        </div>
-        <div class="task-card">
-          <div class="task-emoji-box">🌾</div>
-          <div class="task-info">
-            <div class="task-title">キュウリの収穫</div>
-            <div class="task-meta">
-              <span class="task-date" style="color:var(--warning);">⏱ 明日</span>
-              <span class="task-category-badge">収穫</span>
-            </div>
-          </div>
-          <div class="task-check"></div>
-        </div>
-
-        <!-- 育てているもの -->
-        <div class="section-header" style="margin-top:8px;">
-          <span class="section-title">育てているもの</span>
-          <span class="see-all">図鑑を見る</span>
-        </div>
-        <div class="crop-scroll">
-          <div class="crop-chip"><div class="crop-circle">🍅</div><div class="crop-name">トマト</div></div>
-          <div class="crop-chip"><div class="crop-circle">🌿</div><div class="crop-name">バジル</div></div>
-          <div class="crop-chip"><div class="crop-circle">🥒</div><div class="crop-name">キュウリ</div></div>
-        </div>
-        <div style="height:16px;"></div>
-      </div>
-      <div class="bottom-nav">
-        <div class="nav-item active"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
       </div>
     </div>
-    <div class="screen-label">ホーム画面</div>
+    <div style="height:80px"></div>
+  </div>
+  <!-- FAB -->
+  <div class="fab">
+    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05zM12 2a9.96 9.96 0 0 1 4 .83V2h1v3.29A10 10 0 1 1 2 12h2a8 8 0 1 0 8-8V2z"/></svg></div>病害虫</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
   </div>
 </div>
-
-<!-- 病害虫チェッカー -->
-<div class="screen-container" id="screen-pest">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="app-bar">
-          <span class="app-bar-title">病害虫チェッカー</span>
-        </div>
-        <div class="pest-hint">
-          <div class="pest-hint-icon">📷</div>
-          <div>
-            <div class="pest-hint-title">植物の写真を撮ってください</div>
-            <div class="pest-hint-desc">病気や病害虫が疑われる葉・茎・実を撮影するとより正確に診断できます</div>
-          </div>
-        </div>
-        <div class="action-btn green">📷 カメラで撮影</div>
-        <div class="action-btn brown">🖼 アルバムから選択</div>
-        <div style="padding: 16px 16px 8px; font-size:18px; font-weight:700; color:var(--on-surface);">病害虫について学ぶ</div>
-        <div class="info-btn active">病害虫の説明</div>
-        <div class="info-btn">対処法</div>
-        <div class="info-btn">対策・予防</div>
-        <div class="card" style="margin-top:8px;">
-          <div style="font-size:15px;font-weight:700;margin-bottom:12px;">主な病害虫の種類</div>
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;">
-            <span style="font-size:22px;">🐛</span>
-            <div><div style="font-weight:600;font-size:14px;">アブラムシ</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">葉や茎に集団で寄生し、植物の汁を吸います。</div></div>
-          </div>
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;">
-            <span style="font-size:22px;">🕷️</span>
-            <div><div style="font-weight:600;font-size:14px;">ハダニ</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">高温乾燥時に発生。葉に細かい斑点ができます。</div></div>
-          </div>
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;">
-            <span style="font-size:22px;">🍄</span>
-            <div><div style="font-weight:600;font-size:14px;">うどんこ病</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">白い粉状のカビが葉に広がります。</div></div>
-          </div>
-        </div>
-        <div style="height:16px;"></div>
-      </div>
-      <div class="bottom-nav">
-        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item active"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
-      </div>
-    </div>
-    <div class="screen-label">病害虫チェッカー</div>
-  </div>
+<div class="screen-label">ブログ（Twitter風・画像添付対応）</div>
+</div>
 </div>
 
-<!-- 作物図鑑 -->
-<div class="screen-container" id="screen-encyclopedia">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="app-bar">
-          <span class="app-bar-title">作物図鑑</span>
-        </div>
-        <div class="search-bar">🔍 作物名で検索...</div>
-        <div class="crop-grid">
-          <div class="crop-grid-item"><div class="crop-grid-circle">🍅</div><div class="crop-grid-name">トマト</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🌿</div><div class="crop-grid-name">バジル</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🥒</div><div class="crop-grid-name">キュウリ</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🍓</div><div class="crop-grid-name">イチゴ</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🥬</div><div class="crop-grid-name">レタス</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🥦</div><div class="crop-grid-name">ほうれん草</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🫑</div><div class="crop-grid-name">ピーマン</div></div>
-          <div class="crop-grid-item"><div class="crop-grid-circle">🍆</div><div class="crop-grid-name">ナス</div></div>
-        </div>
+<!-- ===================== PROFILE ===================== -->
+<div class="screen" id="s-prof">
+<div>
+<div class="phone" style="position:relative">
+  <div class="notch"></div>
+  <div class="body">
+    <div style="background:var(--surface);position:relative">
+      <div class="prof-banner"></div>
+      <div class="settings-btn">
+        <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
       </div>
-      <div class="bottom-nav">
-        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item active"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      <div class="prof-info">
+        <div class="prof-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="#fff"/></svg></div>
+        <div>
+          <div class="prof-name">田中 花子</div>
+          <div class="prof-bio">都市農業が趣味のベランダ菜園家です🌱</div>
+        </div>
       </div>
     </div>
-    <div class="screen-label">作物図鑑</div>
+    <div style="padding:14px 16px 8px;font-size:16px;font-weight:700;color:var(--text);border-bottom:1px solid var(--divider)">自分が出してきたブログ</div>
+    <div class="my-post">
+      <div style="display:flex;justify-content:space-between">
+        <div class="mp-title">トマトが赤くなってきた！</div>
+        <span class="chip chip-g" style="font-size:11px;padding:2px 8px">公開</span>
+      </div>
+      <div class="mp-content">ベランダで育てているトマトがついに赤くなってきました。毎日水やりをした甲斐がありました。</div>
+      <div class="mp-footer">
+        <span class="mp-date">2024年5月26日</span>
+        <div class="mp-counts">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>12
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>3
+        </div>
+      </div>
+    </div>
+    <div class="my-post">
+      <div style="display:flex;justify-content:space-between">
+        <div class="mp-title">キュウリが豊作すぎる問題</div>
+        <span class="chip chip-g" style="font-size:11px;padding:2px 8px">公開</span>
+      </div>
+      <div class="mp-content">キュウリが毎日大量に収穫できて嬉しい反面、食べきれない…近所の方に分けました。</div>
+      <div class="mp-footer">
+        <span class="mp-date">2024年5月23日</span>
+        <div class="mp-counts">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>24
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>10
+        </div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05z"/></svg></div>病害虫</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
   </div>
 </div>
-
-<!-- 作物詳細 -->
-<div class="screen-container" id="screen-detail">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="detail-hero">🍅</div>
-        <div class="detail-section">
-          <div class="section-badge">野菜の名前</div>
-          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
-            <span style="font-size:26px;font-weight:700;">トマト</span>
-            <span style="font-size:15px;color:var(--on-surface-variant);">Tomato</span>
-          </div>
-          <div><span class="difficulty-badge">中級者向け</span></div>
-          <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
-            <span style="background:var(--surface-variant);padding:4px 10px;border-radius:10px;font-size:12px;">🏠 ベランダ</span>
-            <span style="background:var(--surface-variant);padding:4px 10px;border-radius:10px;font-size:12px;">🌾 畑・庭</span>
-          </div>
-          <div style="margin-top:10px;font-size:13px;color:var(--on-surface-variant);line-height:1.6;">家庭菜園で最も人気のある野菜の一つ。日当たりと水はけの良い場所で育てましょう。</div>
-        </div>
-        <div class="detail-section">
-          <div class="section-badge">栽培方法や栽培期間</div>
-          <div class="period-badge" style="margin-bottom:12px;">⏱ 苗植えから約60〜80日で収穫</div>
-          <div style="font-size:13px;color:var(--on-surface);line-height:1.6;margin-bottom:12px;">支柱を立てて誘引しながら育てます。1本仕立てにすることで実が大きく育ちます。</div>
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">栽培適期</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-            <span style="background:var(--surface-variant);padding:5px 12px;border-radius:16px;font-size:12px;">🌸 春</span>
-            <span style="background:var(--surface-variant);padding:5px 12px;border-radius:16px;font-size:12px;">☀️ 夏</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--on-surface);">💧 水やり: 毎日</div>
-        </div>
-        <div class="detail-section">
-          <div class="section-badge">主な病気や病害虫</div>
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🐛 主な病害虫</div>
-          <div>
-            <span class="pest-chip">アブラムシ</span>
-            <span class="pest-chip">ハダニ</span>
-            <span class="pest-chip">コナジラミ</span>
-          </div>
-          <div style="font-weight:600;font-size:13px;margin:10px 0 6px;">🍄 主な病気</div>
-          <div>
-            <span class="disease-chip">疫病</span>
-            <span class="disease-chip">青枯れ病</span>
-            <span class="disease-chip">モザイク病</span>
-          </div>
-          <div style="background:var(--primary);color:white;border-radius:16px;padding:14px;text-align:center;margin-top:14px;font-weight:600;font-size:15px;">📷 病害虫チェッカーで診断</div>
-        </div>
-        <div style="height:24px;"></div>
-      </div>
-      <div class="bottom-nav">
-        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item active"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
-      </div>
-    </div>
-    <div class="screen-label">作物詳細（トマト）</div>
-  </div>
+<div class="screen-label">ブログ プロフィール</div>
+</div>
 </div>
 
-<!-- ブログ -->
-<div class="screen-container" id="screen-blog">
-  <div>
-    <div class="phone-frame" style="position:relative;">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="app-bar">
-          <span class="app-bar-title">ブログ</span>
-          <div class="avatar-btn">👤</div>
+<!-- ===================== TASK ===================== -->
+<div class="screen" id="s-task">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="appbar"><span class="appbar-title">タスク</span></div>
+    <div class="form-section">
+      <div class="form-label">何をするか</div>
+      <div class="form-field"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>タスク名を入力...</div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <div style="flex:1">
+          <div class="form-label">いつするか</div>
+          <div class="form-field"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>5月26日</div>
         </div>
-        <div class="blog-card">
-          <div class="blog-header">
-            <div class="blog-avatar">田</div>
-            <div>
-              <div class="blog-author">田中 花子</div>
-              <div class="blog-time">2時間前</div>
-            </div>
-          </div>
-          <div class="blog-body">
-            <div class="blog-title">トマトが赤くなってきた！</div>
-            <div class="blog-content">ベランダで育てているトマトがついに赤くなってきました。毎日水やりをした甲斐がありました。あと3日くらいで収穫できそうです😊</div>
-            <div class="blog-tags">
-              <span class="blog-tag">#トマト</span>
-              <span class="blog-tag">#収穫前</span>
-              <span class="blog-tag">#ベランダ菜園</span>
-            </div>
-          </div>
-          <div class="blog-footer">
-            <div class="blog-like">❤️ 12</div>
-            <div class="blog-like">💬 3</div>
-          </div>
+        <div style="flex:1">
+          <div class="form-label">カテゴリー</div>
+          <div class="form-field"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>水やり ▾</div>
         </div>
-        <div class="blog-card">
-          <div class="blog-header">
-            <div class="blog-avatar" style="background:var(--secondary-container);color:var(--secondary);">鈴</div>
-            <div>
-              <div class="blog-author">鈴木 太郎</div>
-              <div class="blog-time">1日前</div>
-            </div>
-          </div>
-          <div class="blog-body">
-            <div class="blog-title">アブラムシの対策を試してみた</div>
-            <div class="blog-content">先週からバジルにアブラムシがついてしまい、色々対策を試してみました。今日はペットボトルスプレーで水洗いする方法を実践。</div>
-            <div class="blog-tags">
-              <span class="blog-tag">#病害虫対策</span>
-              <span class="blog-tag">#バジル</span>
-            </div>
-          </div>
-          <div class="blog-footer">
-            <div class="blog-like">❤️ 8</div>
-            <div class="blog-like">💬 5</div>
-          </div>
-        </div>
-        <div style="height:80px;"></div>
       </div>
-      <!-- FAB -->
-      <div style="position:absolute;bottom:80px;right:20px;width:56px;height:56px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;box-shadow:0 4px 16px rgba(90,122,58,0.4);cursor:pointer;">+</div>
-      <div class="bottom-nav">
-        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item active"><span class="icon">📝</span>ブログ</div>
-      </div>
+      <div class="add-btn">追加</div>
     </div>
-    <div class="screen-label">ブログ</div>
+    <div class="task-row">
+      <div class="task-box"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div style="flex:1"><div class="task-title">トマトに水やり</div><div class="task-meta"><span class="task-date warn">今日</span><span class="chip chip-b" style="font-size:11px;padding:2px 8px">水やり</span></div></div>
+      <div class="task-check"></div>
+    </div>
+    <div class="task-row">
+      <div class="task-box"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>
+      <div style="flex:1"><div class="task-title">キュウリの収穫</div><div class="task-meta"><span class="task-date">明日</span><span class="chip chip-b" style="font-size:11px;padding:2px 8px">収穫</span></div></div>
+      <div class="task-check"></div>
+    </div>
+    <div class="task-row" style="opacity:.55">
+      <div class="task-box"><svg viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></div>
+      <div style="flex:1"><div class="task-title" style="text-decoration:line-through">バジルの追肥</div><div class="task-meta"><span class="task-date">完了済み</span></div></div>
+      <div class="task-check done"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05z"/></svg></div>病害虫</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem on"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
   </div>
 </div>
-
-<!-- プロフィール -->
-<div class="screen-container" id="screen-profile">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="profile-header">
-          <div class="profile-banner"></div>
-          <div class="settings-fab" style="top:52px;">⚙️</div>
-          <div class="profile-info">
-            <div class="profile-avatar">👤</div>
-            <div style="padding-bottom:4px;">
-              <div class="profile-name">田中 花子</div>
-              <div class="profile-bio">都市農業が趣味のベランダ菜園家です🌱</div>
-            </div>
-          </div>
-        </div>
-        <div style="padding: 16px 16px 8px; font-size:18px; font-weight:700; color:var(--on-surface);">自分が出してきたブログ</div>
-        <div class="my-post-item">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div class="my-post-title">トマトが赤くなってきた！</div>
-            <span class="post-badge public">公開</span>
-          </div>
-          <div class="my-post-content">ベランダで育てているトマトがついに赤くなってきました。毎日水やりをした甲斐がありました。</div>
-          <div class="my-post-footer">
-            <span style="font-size:12px;color:var(--on-surface-variant);">2024年5月26日</span>
-            <span style="font-size:12px;color:var(--on-surface-variant);">❤️ 12　💬 3</span>
-          </div>
-        </div>
-        <div class="my-post-item">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div class="my-post-title">キュウリが豊作すぎる問題</div>
-            <span class="post-badge public">公開</span>
-          </div>
-          <div class="my-post-content">キュウリが毎日大量に収穫できて嬉しい反面、食べきれない…</div>
-          <div class="my-post-footer">
-            <span style="font-size:12px;color:var(--on-surface-variant);">2024年5月23日</span>
-            <span style="font-size:12px;color:var(--on-surface-variant);">❤️ 24　💬 10</span>
-          </div>
-        </div>
-        <div style="height:24px;"></div>
-      </div>
-      <div class="bottom-nav">
-        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item active"><span class="icon">📝</span>ブログ</div>
-      </div>
-    </div>
-    <div class="screen-label">ブログ プロフィール</div>
-  </div>
+<div class="screen-label">タスク管理</div>
+</div>
 </div>
 
-<!-- タスク -->
-<div class="screen-container" id="screen-task">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="app-bar">
-          <span class="app-bar-title">タスク</span>
-        </div>
-        <div style="background:var(--surface);padding:16px;border-bottom:1px solid var(--card-border);">
-          <div class="form-label">何をするか</div>
-          <div class="form-field">✏️ タスク名を入力...</div>
-          <div style="display:flex;gap:12px;margin-top:12px;">
-            <div style="flex:1;">
-              <div class="form-label">いつするか</div>
-              <div class="form-field">📅 2024年5月26日</div>
-            </div>
-            <div style="flex:1;">
-              <div class="form-label">カテゴリー</div>
-              <div class="form-field">💧 水やり ▾</div>
-            </div>
-          </div>
-          <div class="add-btn">追加</div>
-        </div>
-        <div class="task-card">
-          <div class="task-emoji-box">💧</div>
-          <div class="task-info">
-            <div class="task-title">トマトに水やり</div>
-            <div class="task-meta">
-              <span class="task-date" style="color:var(--warning);">⏱ 今日</span>
-              <span class="task-category-badge">水やり</span>
-            </div>
-          </div>
-          <div class="task-check"></div>
-        </div>
-        <div class="task-card">
-          <div class="task-emoji-box">🌾</div>
-          <div class="task-info">
-            <div class="task-title">キュウリの収穫</div>
-            <div class="task-meta">
-              <span class="task-date">⏱ 明日</span>
-              <span class="task-category-badge">収穫</span>
-            </div>
-          </div>
-          <div class="task-check"></div>
-        </div>
-        <div class="task-card" style="opacity:0.6;">
-          <div class="task-emoji-box">🌱</div>
-          <div class="task-info">
-            <div class="task-title" style="text-decoration:line-through;">バジルの追肥</div>
-            <div class="task-meta">
-              <span class="task-date">⏱ 完了済み</span>
-              <span class="task-category-badge">施肥</span>
-            </div>
-          </div>
-          <div class="task-check done">✓</div>
-        </div>
-        <div style="height:24px;"></div>
-      </div>
-      <div class="bottom-nav">
-        <div class="nav-item active"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+<!-- ===================== SETTINGS ===================== -->
+<div class="screen" id="s-set">
+<div>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="body">
+    <div class="appbar"><span class="appbar-title">アプリ設定</span></div>
+    <div style="height:8px"></div>
+    <div class="scard">
+      <div class="srow">
+        <div class="sicon"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div>
+        <div class="stitle" style="flex:1">通知<br><span class="ssub">水やりや収穫のタイミングをお知らせ</span></div>
+        <div class="toggle"></div>
       </div>
     </div>
-    <div class="screen-label">タスク管理</div>
+    <div class="scard">
+      <div class="srow">
+        <div class="sicon"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></div>
+        <div class="stitle" style="flex:1">公開設定<br><span class="ssub">プロフィールを公開中</span></div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:12px;font-weight:600;color:var(--green)">公開</span>
+          <div class="toggle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div style="padding:14px 16px 6px;font-size:16px;font-weight:700;color:var(--text)">栽培場所</div>
+      <div class="chip-group">
+        <div class="copt on">ベランダ</div>
+        <div class="copt">畑・庭</div>
+        <div class="copt">室内</div>
+      </div>
+    </div>
+    <div class="scard">
+      <div style="padding:14px 16px 6px;font-size:16px;font-weight:700;color:var(--text)">栽培地域</div>
+      <div class="chip-group">
+        <div class="copt on">東日本</div>
+        <div class="copt">西日本</div>
+        <div class="copt">中部</div>
+        <div class="copt">九州</div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:28px 16px">
+      <svg viewBox="0 0 24 24" style="width:32px;fill:var(--green)"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg>
+      <div style="font-weight:700;color:var(--green);margin-top:6px">GreenThumb</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:3px">Version 1.0.0 · Powered by Gemini AI</div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>ホーム</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M6.05 8.5A6.5 6.5 0 0 0 12 17.5a6.5 6.5 0 0 0 6-9H6.05z"/></svg></div>病害虫</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2v0c2-2 3-4 3-4s-9 3-9 9c0 2.7 1 4.7 2.5 6.3L8 17c1-2 2-4 9-9z"/></svg></div>作物図鑑</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>ブログ</div>
+    <div class="bitem"><div class="bi"><svg class="si" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>タスク</div>
   </div>
 </div>
-
-<!-- 設定 -->
-<div class="screen-container" id="screen-settings">
-  <div>
-    <div class="phone-frame">
-      <div class="notch"></div>
-      <div class="screen-content">
-        <div class="app-bar">
-          <span class="app-bar-title">アプリ設定</span>
-        </div>
-        <div style="height:8px;"></div>
-        <div class="settings-card">
-          <div class="settings-row">
-            <div class="settings-icon">🔔</div>
-            <div class="settings-text">
-              <div class="settings-title">通知</div>
-              <div class="settings-sub">水やりや収穫のタイミングをお知らせします</div>
-            </div>
-            <div class="toggle"></div>
-          </div>
-        </div>
-        <div class="settings-card">
-          <div class="settings-row">
-            <div class="settings-icon">👁️</div>
-            <div class="settings-text">
-              <div class="settings-title">公開設定</div>
-              <div class="settings-sub">プロフィールを公開中</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span style="font-size:12px;font-weight:600;color:var(--primary);">公開</span>
-              <div class="toggle"></div>
-            </div>
-          </div>
-        </div>
-        <div class="settings-card">
-          <div style="padding:16px 16px 8px;font-size:18px;font-weight:700;color:var(--on-surface);">栽培場所</div>
-          <div class="chip-group">
-            <div class="chip-option selected">ベランダ</div>
-            <div class="chip-option">畑・庭</div>
-            <div class="chip-option">室内</div>
-          </div>
-        </div>
-        <div class="settings-card">
-          <div style="padding:16px 16px 8px;font-size:18px;font-weight:700;color:var(--on-surface);">栽培地域</div>
-          <div class="chip-group">
-            <div class="chip-option selected">東日本</div>
-            <div class="chip-option">西日本</div>
-            <div class="chip-option">中部</div>
-            <div class="chip-option">九州</div>
-          </div>
-        </div>
-        <div style="text-align:center;padding:32px;color:var(--on-surface-variant);">
-          <div style="font-size:32px;">🌿</div>
-          <div style="font-weight:700;color:var(--primary);margin-top:8px;">GreenThumb</div>
-          <div style="font-size:13px;margin-top:4px;">Version 1.0.0</div>
-          <div style="font-size:13px;">家庭菜園をもっと楽しく</div>
-        </div>
-      </div>
-      <div class="bottom-nav">
-        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
-        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
-        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
-        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
-      </div>
-    </div>
-    <div class="screen-label">アプリ設定</div>
-  </div>
+<div class="screen-label">アプリ設定</div>
+</div>
 </div>
 
 <script>
-function showScreen(name) {
-  document.querySelectorAll('.screen-container').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  event.target.classList.add('active');
+function show(name, btn) {
+  document.querySelectorAll('.screen').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('on'));
+  document.getElementById('s-'+name).classList.add('on');
+  btn.classList.add('on');
 }
 </script>
 </body>

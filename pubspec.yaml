@@ -23,6 +23,9 @@ dependencies:
   dio: ^5.4.3+1
   retrofit: ^4.1.0
 
+  # AI / Gemini API
+  google_generative_ai: ^0.4.6
+
   # ローカルDB
   sqflite: ^2.3.3
   path: ^1.9.0
