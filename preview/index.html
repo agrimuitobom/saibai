@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenThumb - UI Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #5A7A3A;
+    --primary-light: #7EA853;
+    --primary-dark: #3D5729;
+    --primary-container: #D4E8B8;
+    --secondary: #8B6340;
+    --secondary-container: #EDD9C4;
+    --background: #F5F0E8;
+    --surface: #FAF7F2;
+    --surface-variant: #EDE8DF;
+    --on-surface: #3D3026;
+    --on-surface-variant: #6B5E4E;
+    --card-border: #D4C9B8;
+    --error: #BA1A1A;
+    --warning: #E07B39;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #E8E0D4;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    color: var(--primary-dark);
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--on-surface-variant);
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+
+  /* タブナビゲーション */
+  .tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--card-border);
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--on-surface-variant);
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+  .tab-btn:hover { opacity: 0.85; }
+
+  /* スクリーンコンテナ */
+  .screen-container { display: none; }
+  .screen-container.active { display: flex; justify-content: center; }
+
+  /* iPhoneフレーム */
+  .phone-frame {
+    width: 375px;
+    min-height: 812px;
+    background: var(--background);
+    border-radius: 44px;
+    border: 10px solid #1a1a1a;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 0 0 2px #333;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .notch {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 150px; height: 30px;
+    background: #1a1a1a;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+  }
+  .screen-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-top: 44px;
+  }
+  .screen-content::-webkit-scrollbar { width: 4px; }
+  .screen-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+
+  /* AppBar */
+  .app-bar {
+    background: var(--surface);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--card-border);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .app-bar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--on-surface);
+  }
+  .app-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-icon-small {
+    width: 36px; height: 36px;
+    background: var(--primary-container);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .avatar-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--primary-container);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* BottomNav */
+  .bottom-nav {
+    background: var(--surface);
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    padding: 8px 0 20px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px 0;
+    color: var(--on-surface-variant);
+    font-size: 11px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-item.active { color: var(--primary); }
+  .nav-item .icon { font-size: 22px; }
+
+  /* カード */
+  .card {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 16px;
+    margin: 8px 16px;
+    box-shadow: 0 2px 8px rgba(107,94,78,0.08);
+  }
+
+  /* 天気カード */
+  .weather-card {
+    margin: 8px 16px;
+    padding: 20px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #FFB300, #FF8F00);
+    color: white;
+    box-shadow: 0 4px 20px rgba(255,179,0,0.3);
+  }
+  .weather-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .weather-location { display: flex; align-items: center; gap: 4px; font-size: 13px; opacity: 0.85; }
+  .weather-condition { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .weather-emoji { font-size: 56px; line-height: 1; }
+  .weather-temp { font-size: 52px; font-weight: 700; line-height: 1; }
+  .weather-details { font-size: 13px; opacity: 0.8; margin-left: 12px; }
+  .weather-advice {
+    margin-top: 12px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* セクションヘッダー */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px 4px;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--on-surface); }
+  .see-all { font-size: 13px; color: var(--primary); font-weight: 600; cursor: pointer; }
+
+  /* タスクカード */
+  .task-card {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 14px 16px;
+    margin: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(107,94,78,0.07);
+  }
+  .task-emoji-box {
+    width: 44px; height: 44px;
+    background: var(--primary-container);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .task-info { flex: 1; }
+  .task-title { font-size: 15px; font-weight: 600; color: var(--on-surface); }
+  .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .task-date { font-size: 12px; color: var(--on-surface-variant); }
+  .task-category-badge {
+    font-size: 11px;
+    color: var(--on-surface-variant);
+    background: var(--surface-variant);
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+  .task-check {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--card-border);
+    flex-shrink: 0;
+  }
+  .task-check.done {
+    background: var(--primary);
+    border-color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 14px;
+  }
+
+  /* 作物スクロール */
+  .crop-scroll {
+    display: flex;
+    gap: 12px;
+    padding: 4px 16px 12px;
+    overflow-x: auto;
+  }
+  .crop-scroll::-webkit-scrollbar { display: none; }
+  .crop-chip {
+    width: 100px;
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .crop-circle {
+    width: 48px; height: 48px;
+    background: var(--primary-container);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .crop-name { font-size: 12px; font-weight: 600; color: var(--on-surface); }
+
+  /* スプラッシュ */
+  .splash-bg {
+    flex: 1;
+    background: linear-gradient(180deg, #7EA853, #4A7A2A);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+  }
+  .splash-icon {
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 32px;
+    border: 2px solid rgba(255,255,255,0.5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+  }
+  .splash-title { font-size: 40px; font-weight: 700; color: white; letter-spacing: 2px; }
+  .splash-subtitle { font-size: 16px; color: rgba(255,255,255,0.85); }
+  .splash-loader {
+    width: 40px; height: 40px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-top: 24px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* 病害虫チェッカー */
+  .pest-hint {
+    background: var(--primary-container);
+    border-radius: 20px;
+    padding: 16px;
+    margin: 12px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .pest-hint-icon { font-size: 28px; }
+  .pest-hint-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); }
+  .pest-hint-desc { font-size: 12px; color: var(--primary-dark); margin-top: 4px; }
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 20px;
+    padding: 16px;
+    margin: 8px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+  }
+  .action-btn.green { background: var(--primary); box-shadow: 0 4px 16px rgba(90,122,58,0.3); }
+  .action-btn.brown { background: var(--secondary); box-shadow: 0 4px 16px rgba(139,99,64,0.3); }
+  .info-btn {
+    width: calc(100% - 32px);
+    margin: 6px 16px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    background: var(--surface);
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--on-surface);
+    cursor: pointer;
+  }
+  .info-btn.active {
+    background: var(--primary-container);
+    border: 2px solid var(--primary);
+    color: var(--primary-dark);
+    box-shadow: 0 2px 12px rgba(90,122,58,0.15);
+  }
+
+  /* 作物図鑑グリッド */
+  .search-bar {
+    margin: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--on-surface-variant);
+    font-size: 14px;
+  }
+  .crop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 4px 16px 16px;
+  }
+  .crop-grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .crop-grid-circle {
+    width: 84px; height: 84px;
+    background: var(--primary-container);
+    border-radius: 50%;
+    border: 1.5px solid var(--card-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 2px 8px rgba(107,94,78,0.1);
+    transition: transform 0.15s;
+  }
+  .crop-grid-circle:hover { transform: scale(1.05); }
+  .crop-grid-name { font-size: 12px; font-weight: 600; color: var(--on-surface); }
+
+  /* ブログ */
+  .blog-card {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    margin: 8px 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(107,94,78,0.07);
+  }
+  .blog-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .blog-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--primary-container);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    flex-shrink: 0;
+  }
+  .blog-author { font-size: 14px; font-weight: 600; color: var(--on-surface); }
+  .blog-time { font-size: 12px; color: var(--on-surface-variant); }
+  .blog-image {
+    height: 160px;
+    margin: 0 16px;
+    background: var(--primary-container);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+    color: var(--primary);
+  }
+  .blog-body { padding: 12px 16px; }
+  .blog-title { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-bottom: 6px; }
+  .blog-content { font-size: 13px; color: var(--on-surface-variant); line-height: 1.6; }
+  .blog-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .blog-tag {
+    font-size: 11px;
+    background: var(--primary-container);
+    color: var(--primary-dark);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .blog-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .blog-like { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--on-surface-variant); }
+  .fab {
+    position: fixed;
+    bottom: 100px;
+    right: calc(50% - 375px/2 + 24px);
+    width: 56px; height: 56px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    color: white;
+    box-shadow: 0 4px 16px rgba(90,122,58,0.4);
+    cursor: pointer;
+  }
+
+  /* タスク入力フォーム */
+  .form-field {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+  }
+  .form-label { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 2px; }
+  .add-btn {
+    background: var(--primary);
+    color: white;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 12px;
+    cursor: pointer;
+  }
+
+  /* 設定 */
+  .settings-card {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    margin: 8px 16px;
+    overflow: hidden;
+  }
+  .settings-row {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-icon {
+    width: 44px; height: 44px;
+    background: var(--primary-container);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .settings-text { flex: 1; }
+  .settings-title { font-size: 15px; font-weight: 600; color: var(--on-surface); }
+  .settings-sub { font-size: 12px; color: var(--on-surface-variant); }
+  .toggle {
+    width: 52px; height: 30px;
+    background: var(--primary);
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px; right: 3px;
+    width: 24px; height: 24px;
+    background: white;
+    border-radius: 50%;
+  }
+  .toggle.off { background: var(--card-border); }
+  .toggle.off::after { right: auto; left: 3px; }
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+  }
+  .chip-option {
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--card-border);
+    background: var(--surface-variant);
+    color: var(--on-surface);
+    cursor: pointer;
+  }
+  .chip-option.selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+
+  /* プロフィール */
+  .profile-header {
+    background: var(--surface);
+    position: relative;
+  }
+  .profile-banner {
+    height: 120px;
+    background: linear-gradient(135deg, var(--primary-container), var(--surface-variant));
+  }
+  .profile-info {
+    padding: 0 24px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    margin-top: -40px;
+  }
+  .profile-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--secondary);
+    border: 3px solid var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+  .profile-name { font-size: 22px; font-weight: 700; color: var(--on-surface); }
+  .profile-bio { font-size: 12px; color: var(--on-surface-variant); margin-top: 4px; }
+  .settings-fab {
+    position: absolute;
+    top: 12px; right: 16px;
+    width: 40px; height: 40px;
+    background: var(--secondary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .my-post-item {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 14px 16px;
+    margin: 6px 16px;
+  }
+  .my-post-title { font-size: 14px; font-weight: 600; color: var(--on-surface); }
+  .my-post-content { font-size: 12px; color: var(--on-surface-variant); margin-top: 4px; line-height: 1.5; }
+  .my-post-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .post-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .post-badge.public { background: var(--primary-container); color: var(--primary-dark); }
+  .post-badge.private { background: var(--surface-variant); color: var(--on-surface-variant); }
+
+  /* 作物詳細 */
+  .detail-hero {
+    height: 200px;
+    background: var(--primary-container);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 96px;
+  }
+  .section-badge {
+    display: inline-block;
+    background: var(--primary-container);
+    color: var(--primary-dark);
+    padding: 5px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .detail-section {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 16px;
+    margin: 8px 16px;
+  }
+  .difficulty-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(76,175,80,0.15);
+    color: #2E7D32;
+    border: 1px solid rgba(76,175,80,0.3);
+    margin-right: 8px;
+  }
+  .pest-chip {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    margin: 3px;
+    background: rgba(186,26,26,0.08);
+    border: 1px solid rgba(186,26,26,0.2);
+    color: #8B0000;
+  }
+  .disease-chip {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    margin: 3px;
+    background: rgba(224,123,57,0.08);
+    border: 1px solid rgba(224,123,57,0.3);
+    color: #7B3B00;
+  }
+  .period-badge {
+    background: var(--secondary-container);
+    color: var(--secondary);
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* スクリーン名ラベル */
+  .screen-label {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌱 GreenThumb</h1>
+<p class="subtitle">家庭菜園アプリ — UIプレビュー</p>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showScreen('splash')">スプラッシュ</button>
+  <button class="tab-btn" onclick="showScreen('home')">ホーム</button>
+  <button class="tab-btn" onclick="showScreen('pest')">病害虫チェッカー</button>
+  <button class="tab-btn" onclick="showScreen('encyclopedia')">作物図鑑</button>
+  <button class="tab-btn" onclick="showScreen('detail')">作物詳細</button>
+  <button class="tab-btn" onclick="showScreen('blog')">ブログ</button>
+  <button class="tab-btn" onclick="showScreen('profile')">プロフィール</button>
+  <button class="tab-btn" onclick="showScreen('task')">タスク</button>
+  <button class="tab-btn" onclick="showScreen('settings')">設定</button>
+</div>
+
+<!-- スプラッシュ画面 -->
+<div class="screen-container active" id="screen-splash">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content" style="display:flex;flex-direction:column;padding-top:0;">
+        <div class="splash-bg">
+          <div class="splash-icon">🌿</div>
+          <div class="splash-title">GreenThumb</div>
+          <div class="splash-subtitle">家庭菜園をもっと楽しく</div>
+          <div class="splash-loader"></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">スプラッシュ画面</div>
+  </div>
+</div>
+
+<!-- ホーム画面 -->
+<div class="screen-container" id="screen-home">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <div class="app-bar-logo">
+            <div class="app-icon-small">🌿</div>
+            <span class="app-bar-title" style="color:var(--primary);">GreenThumb</span>
+          </div>
+          <div class="avatar-btn">👤</div>
+        </div>
+
+        <!-- 天気ウィジェット -->
+        <div class="weather-card">
+          <div class="weather-top">
+            <div>
+              <div class="weather-location">📍 東京</div>
+              <div class="weather-condition">晴れ</div>
+            </div>
+            <div class="weather-emoji">☀️</div>
+          </div>
+          <div style="display:flex;align-items:flex-end;margin-top:12px;">
+            <div class="weather-temp">26°</div>
+            <div class="weather-details">
+              <div>体感 24°</div>
+              <div>湿度 58%</div>
+              <div>風速 3.2m/s</div>
+            </div>
+          </div>
+          <div class="weather-advice">
+            🌾 菜園日和です！定植や収穫に最適です。
+          </div>
+        </div>
+
+        <!-- タスクセクション -->
+        <div class="section-header">
+          <span class="section-title">タスク</span>
+          <span class="see-all">すべて見る</span>
+        </div>
+        <div style="margin: 0 16px 6px; display:inline-block; background:var(--primary-container); padding:5px 12px; border-radius:12px; font-size:13px; font-weight:600; color:var(--primary-dark);">今日のタスク: 1件</div>
+        <div class="task-card">
+          <div class="task-emoji-box">💧</div>
+          <div class="task-info">
+            <div class="task-title">トマトに水やり</div>
+            <div class="task-meta">
+              <span class="task-date">⏱ 今日</span>
+              <span class="task-category-badge">水やり</span>
+            </div>
+          </div>
+          <div class="task-check"></div>
+        </div>
+        <div class="task-card">
+          <div class="task-emoji-box">🌱</div>
+          <div class="task-info">
+            <div class="task-title">バジルの追肥</div>
+            <div class="task-meta">
+              <span class="task-date">⏱ 2日後</span>
+              <span class="task-category-badge">施肥</span>
+            </div>
+          </div>
+          <div class="task-check"></div>
+        </div>
+        <div class="task-card">
+          <div class="task-emoji-box">🌾</div>
+          <div class="task-info">
+            <div class="task-title">キュウリの収穫</div>
+            <div class="task-meta">
+              <span class="task-date" style="color:var(--warning);">⏱ 明日</span>
+              <span class="task-category-badge">収穫</span>
+            </div>
+          </div>
+          <div class="task-check"></div>
+        </div>
+
+        <!-- 育てているもの -->
+        <div class="section-header" style="margin-top:8px;">
+          <span class="section-title">育てているもの</span>
+          <span class="see-all">図鑑を見る</span>
+        </div>
+        <div class="crop-scroll">
+          <div class="crop-chip"><div class="crop-circle">🍅</div><div class="crop-name">トマト</div></div>
+          <div class="crop-chip"><div class="crop-circle">🌿</div><div class="crop-name">バジル</div></div>
+          <div class="crop-chip"><div class="crop-circle">🥒</div><div class="crop-name">キュウリ</div></div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">ホーム画面</div>
+  </div>
+</div>
+
+<!-- 病害虫チェッカー -->
+<div class="screen-container" id="screen-pest">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span class="app-bar-title">病害虫チェッカー</span>
+        </div>
+        <div class="pest-hint">
+          <div class="pest-hint-icon">📷</div>
+          <div>
+            <div class="pest-hint-title">植物の写真を撮ってください</div>
+            <div class="pest-hint-desc">病気や病害虫が疑われる葉・茎・実を撮影するとより正確に診断できます</div>
+          </div>
+        </div>
+        <div class="action-btn green">📷 カメラで撮影</div>
+        <div class="action-btn brown">🖼 アルバムから選択</div>
+        <div style="padding: 16px 16px 8px; font-size:18px; font-weight:700; color:var(--on-surface);">病害虫について学ぶ</div>
+        <div class="info-btn active">病害虫の説明</div>
+        <div class="info-btn">対処法</div>
+        <div class="info-btn">対策・予防</div>
+        <div class="card" style="margin-top:8px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:12px;">主な病害虫の種類</div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;">
+            <span style="font-size:22px;">🐛</span>
+            <div><div style="font-weight:600;font-size:14px;">アブラムシ</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">葉や茎に集団で寄生し、植物の汁を吸います。</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;">
+            <span style="font-size:22px;">🕷️</span>
+            <div><div style="font-weight:600;font-size:14px;">ハダニ</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">高温乾燥時に発生。葉に細かい斑点ができます。</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;">
+            <span style="font-size:22px;">🍄</span>
+            <div><div style="font-weight:600;font-size:14px;">うどんこ病</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px;">白い粉状のカビが葉に広がります。</div></div>
+          </div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item active"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">病害虫チェッカー</div>
+  </div>
+</div>
+
+<!-- 作物図鑑 -->
+<div class="screen-container" id="screen-encyclopedia">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span class="app-bar-title">作物図鑑</span>
+        </div>
+        <div class="search-bar">🔍 作物名で検索...</div>
+        <div class="crop-grid">
+          <div class="crop-grid-item"><div class="crop-grid-circle">🍅</div><div class="crop-grid-name">トマト</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🌿</div><div class="crop-grid-name">バジル</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🥒</div><div class="crop-grid-name">キュウリ</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🍓</div><div class="crop-grid-name">イチゴ</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🥬</div><div class="crop-grid-name">レタス</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🥦</div><div class="crop-grid-name">ほうれん草</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🫑</div><div class="crop-grid-name">ピーマン</div></div>
+          <div class="crop-grid-item"><div class="crop-grid-circle">🍆</div><div class="crop-grid-name">ナス</div></div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item active"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">作物図鑑</div>
+  </div>
+</div>
+
+<!-- 作物詳細 -->
+<div class="screen-container" id="screen-detail">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="detail-hero">🍅</div>
+        <div class="detail-section">
+          <div class="section-badge">野菜の名前</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+            <span style="font-size:26px;font-weight:700;">トマト</span>
+            <span style="font-size:15px;color:var(--on-surface-variant);">Tomato</span>
+          </div>
+          <div><span class="difficulty-badge">中級者向け</span></div>
+          <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="background:var(--surface-variant);padding:4px 10px;border-radius:10px;font-size:12px;">🏠 ベランダ</span>
+            <span style="background:var(--surface-variant);padding:4px 10px;border-radius:10px;font-size:12px;">🌾 畑・庭</span>
+          </div>
+          <div style="margin-top:10px;font-size:13px;color:var(--on-surface-variant);line-height:1.6;">家庭菜園で最も人気のある野菜の一つ。日当たりと水はけの良い場所で育てましょう。</div>
+        </div>
+        <div class="detail-section">
+          <div class="section-badge">栽培方法や栽培期間</div>
+          <div class="period-badge" style="margin-bottom:12px;">⏱ 苗植えから約60〜80日で収穫</div>
+          <div style="font-size:13px;color:var(--on-surface);line-height:1.6;margin-bottom:12px;">支柱を立てて誘引しながら育てます。1本仕立てにすることで実が大きく育ちます。</div>
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">栽培適期</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+            <span style="background:var(--surface-variant);padding:5px 12px;border-radius:16px;font-size:12px;">🌸 春</span>
+            <span style="background:var(--surface-variant);padding:5px 12px;border-radius:16px;font-size:12px;">☀️ 夏</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--on-surface);">💧 水やり: 毎日</div>
+        </div>
+        <div class="detail-section">
+          <div class="section-badge">主な病気や病害虫</div>
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🐛 主な病害虫</div>
+          <div>
+            <span class="pest-chip">アブラムシ</span>
+            <span class="pest-chip">ハダニ</span>
+            <span class="pest-chip">コナジラミ</span>
+          </div>
+          <div style="font-weight:600;font-size:13px;margin:10px 0 6px;">🍄 主な病気</div>
+          <div>
+            <span class="disease-chip">疫病</span>
+            <span class="disease-chip">青枯れ病</span>
+            <span class="disease-chip">モザイク病</span>
+          </div>
+          <div style="background:var(--primary);color:white;border-radius:16px;padding:14px;text-align:center;margin-top:14px;font-weight:600;font-size:15px;">📷 病害虫チェッカーで診断</div>
+        </div>
+        <div style="height:24px;"></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item active"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">作物詳細（トマト）</div>
+  </div>
+</div>
+
+<!-- ブログ -->
+<div class="screen-container" id="screen-blog">
+  <div>
+    <div class="phone-frame" style="position:relative;">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span class="app-bar-title">ブログ</span>
+          <div class="avatar-btn">👤</div>
+        </div>
+        <div class="blog-card">
+          <div class="blog-header">
+            <div class="blog-avatar">田</div>
+            <div>
+              <div class="blog-author">田中 花子</div>
+              <div class="blog-time">2時間前</div>
+            </div>
+          </div>
+          <div class="blog-body">
+            <div class="blog-title">トマトが赤くなってきた！</div>
+            <div class="blog-content">ベランダで育てているトマトがついに赤くなってきました。毎日水やりをした甲斐がありました。あと3日くらいで収穫できそうです😊</div>
+            <div class="blog-tags">
+              <span class="blog-tag">#トマト</span>
+              <span class="blog-tag">#収穫前</span>
+              <span class="blog-tag">#ベランダ菜園</span>
+            </div>
+          </div>
+          <div class="blog-footer">
+            <div class="blog-like">❤️ 12</div>
+            <div class="blog-like">💬 3</div>
+          </div>
+        </div>
+        <div class="blog-card">
+          <div class="blog-header">
+            <div class="blog-avatar" style="background:var(--secondary-container);color:var(--secondary);">鈴</div>
+            <div>
+              <div class="blog-author">鈴木 太郎</div>
+              <div class="blog-time">1日前</div>
+            </div>
+          </div>
+          <div class="blog-body">
+            <div class="blog-title">アブラムシの対策を試してみた</div>
+            <div class="blog-content">先週からバジルにアブラムシがついてしまい、色々対策を試してみました。今日はペットボトルスプレーで水洗いする方法を実践。</div>
+            <div class="blog-tags">
+              <span class="blog-tag">#病害虫対策</span>
+              <span class="blog-tag">#バジル</span>
+            </div>
+          </div>
+          <div class="blog-footer">
+            <div class="blog-like">❤️ 8</div>
+            <div class="blog-like">💬 5</div>
+          </div>
+        </div>
+        <div style="height:80px;"></div>
+      </div>
+      <!-- FAB -->
+      <div style="position:absolute;bottom:80px;right:20px;width:56px;height:56px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;box-shadow:0 4px 16px rgba(90,122,58,0.4);cursor:pointer;">+</div>
+      <div class="bottom-nav">
+        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item active"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">ブログ</div>
+  </div>
+</div>
+
+<!-- プロフィール -->
+<div class="screen-container" id="screen-profile">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="profile-header">
+          <div class="profile-banner"></div>
+          <div class="settings-fab" style="top:52px;">⚙️</div>
+          <div class="profile-info">
+            <div class="profile-avatar">👤</div>
+            <div style="padding-bottom:4px;">
+              <div class="profile-name">田中 花子</div>
+              <div class="profile-bio">都市農業が趣味のベランダ菜園家です🌱</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding: 16px 16px 8px; font-size:18px; font-weight:700; color:var(--on-surface);">自分が出してきたブログ</div>
+        <div class="my-post-item">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div class="my-post-title">トマトが赤くなってきた！</div>
+            <span class="post-badge public">公開</span>
+          </div>
+          <div class="my-post-content">ベランダで育てているトマトがついに赤くなってきました。毎日水やりをした甲斐がありました。</div>
+          <div class="my-post-footer">
+            <span style="font-size:12px;color:var(--on-surface-variant);">2024年5月26日</span>
+            <span style="font-size:12px;color:var(--on-surface-variant);">❤️ 12　💬 3</span>
+          </div>
+        </div>
+        <div class="my-post-item">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div class="my-post-title">キュウリが豊作すぎる問題</div>
+            <span class="post-badge public">公開</span>
+          </div>
+          <div class="my-post-content">キュウリが毎日大量に収穫できて嬉しい反面、食べきれない…</div>
+          <div class="my-post-footer">
+            <span style="font-size:12px;color:var(--on-surface-variant);">2024年5月23日</span>
+            <span style="font-size:12px;color:var(--on-surface-variant);">❤️ 24　💬 10</span>
+          </div>
+        </div>
+        <div style="height:24px;"></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item active"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">ブログ プロフィール</div>
+  </div>
+</div>
+
+<!-- タスク -->
+<div class="screen-container" id="screen-task">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span class="app-bar-title">タスク</span>
+        </div>
+        <div style="background:var(--surface);padding:16px;border-bottom:1px solid var(--card-border);">
+          <div class="form-label">何をするか</div>
+          <div class="form-field">✏️ タスク名を入力...</div>
+          <div style="display:flex;gap:12px;margin-top:12px;">
+            <div style="flex:1;">
+              <div class="form-label">いつするか</div>
+              <div class="form-field">📅 2024年5月26日</div>
+            </div>
+            <div style="flex:1;">
+              <div class="form-label">カテゴリー</div>
+              <div class="form-field">💧 水やり ▾</div>
+            </div>
+          </div>
+          <div class="add-btn">追加</div>
+        </div>
+        <div class="task-card">
+          <div class="task-emoji-box">💧</div>
+          <div class="task-info">
+            <div class="task-title">トマトに水やり</div>
+            <div class="task-meta">
+              <span class="task-date" style="color:var(--warning);">⏱ 今日</span>
+              <span class="task-category-badge">水やり</span>
+            </div>
+          </div>
+          <div class="task-check"></div>
+        </div>
+        <div class="task-card">
+          <div class="task-emoji-box">🌾</div>
+          <div class="task-info">
+            <div class="task-title">キュウリの収穫</div>
+            <div class="task-meta">
+              <span class="task-date">⏱ 明日</span>
+              <span class="task-category-badge">収穫</span>
+            </div>
+          </div>
+          <div class="task-check"></div>
+        </div>
+        <div class="task-card" style="opacity:0.6;">
+          <div class="task-emoji-box">🌱</div>
+          <div class="task-info">
+            <div class="task-title" style="text-decoration:line-through;">バジルの追肥</div>
+            <div class="task-meta">
+              <span class="task-date">⏱ 完了済み</span>
+              <span class="task-category-badge">施肥</span>
+            </div>
+          </div>
+          <div class="task-check done">✓</div>
+        </div>
+        <div style="height:24px;"></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">タスク管理</div>
+  </div>
+</div>
+
+<!-- 設定 -->
+<div class="screen-container" id="screen-settings">
+  <div>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span class="app-bar-title">アプリ設定</span>
+        </div>
+        <div style="height:8px;"></div>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-icon">🔔</div>
+            <div class="settings-text">
+              <div class="settings-title">通知</div>
+              <div class="settings-sub">水やりや収穫のタイミングをお知らせします</div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-icon">👁️</div>
+            <div class="settings-text">
+              <div class="settings-title">公開設定</div>
+              <div class="settings-sub">プロフィールを公開中</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:12px;font-weight:600;color:var(--primary);">公開</span>
+              <div class="toggle"></div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div style="padding:16px 16px 8px;font-size:18px;font-weight:700;color:var(--on-surface);">栽培場所</div>
+          <div class="chip-group">
+            <div class="chip-option selected">ベランダ</div>
+            <div class="chip-option">畑・庭</div>
+            <div class="chip-option">室内</div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div style="padding:16px 16px 8px;font-size:18px;font-weight:700;color:var(--on-surface);">栽培地域</div>
+          <div class="chip-group">
+            <div class="chip-option selected">東日本</div>
+            <div class="chip-option">西日本</div>
+            <div class="chip-option">中部</div>
+            <div class="chip-option">九州</div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:32px;color:var(--on-surface-variant);">
+          <div style="font-size:32px;">🌿</div>
+          <div style="font-weight:700;color:var(--primary);margin-top:8px;">GreenThumb</div>
+          <div style="font-size:13px;margin-top:4px;">Version 1.0.0</div>
+          <div style="font-size:13px;">家庭菜園をもっと楽しく</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><span class="icon">🏠</span>ホーム</div>
+        <div class="nav-item"><span class="icon">🐛</span>病害虫</div>
+        <div class="nav-item"><span class="icon">📖</span>作物図鑑</div>
+        <div class="nav-item"><span class="icon">📝</span>ブログ</div>
+      </div>
+    </div>
+    <div class="screen-label">アプリ設定</div>
+  </div>
+</div>
+
+<script>
+function showScreen(name) {
+  document.querySelectorAll('.screen-container').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
