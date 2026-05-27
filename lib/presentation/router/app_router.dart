@@ -60,7 +60,7 @@ class AppRouter {
   }
 }
 
-/// メインナビゲーション（ボトムナビゲーションバー 5項目）
+/// メインナビゲーション（ボトムナビゲーションバー 6項目）
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
 
@@ -77,6 +77,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     CropEncyclopediaScreen(),
     BlogScreen(),
     TaskScreen(),
+    SettingsScreen(),
   ];
 
   @override
@@ -118,6 +119,11 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             icon: Icon(Icons.checklist_outlined),
             selectedIcon: Icon(Icons.checklist),
             label: 'タスク',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: '設定',
           ),
         ],
       ),
