@@ -270,6 +270,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:#DDD5C8;padding:24px 16px;
 </head>
 <body>
 
+<!-- Sketch/hand-drawn SVG filter -->
+<svg style="display:none"><defs>
+  <filter id="sketch" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="3" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
 <div class="page-header">
   <h1>GreenThumb</h1>
   <p>家庭菜園アプリ — UIプレビュー（線画イラスト版）</p>
@@ -343,60 +351,102 @@ body{font-family:'Noto Sans JP',sans-serif;background:#DDD5C8;padding:24px 16px;
 <!-- Line art vegetable SVG macros via JS template -->
 <script>
 const SVGS = {
-  tomato: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="40" cy="52" rx="28" ry="24"/>
-    <path d="M40 32 L35 20 L39 28 L40 32Z"/>
-    <path d="M40 32 L27 22 L34 30 L40 32Z"/>
-    <path d="M40 32 L53 22 L46 30 L40 32Z"/>
-    <path d="M40 32 L45 20 L41 28 L40 32Z"/>
-    <rect x="37" y="10" width="6" height="24" rx="3"/>
+  tomato: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Body -->
+    <path d="M14 52 C14 34 25 24 40 24 C55 24 66 34 66 52 C66 67 55 76 40 76 C25 76 14 67 14 52Z" fill="#F5A08A" stroke="#D4806A" stroke-width="1.5"/>
+    <!-- Calyx leaves -->
+    <path d="M40 26 L36 14 L40 22Z" fill="#8FAE8B" stroke="#6A9070" stroke-width="1"/>
+    <path d="M40 26 L26 18 L34 24Z" fill="#8FAE8B" stroke="#6A9070" stroke-width="1"/>
+    <path d="M40 26 L54 18 L46 24Z" fill="#8FAE8B" stroke="#6A9070" stroke-width="1"/>
+    <path d="M40 26 L50 14 L42 22Z" fill="#8FAE8B" stroke="#6A9070" stroke-width="1"/>
+    <path d="M40 26 L30 14 L38 22Z" fill="#8FAE8B" stroke="#6A9070" stroke-width="1"/>
+    <!-- Stem -->
+    <path d="M40 24 C39 16 40 8 41 6" stroke="#7A9E7A" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <!-- Highlight -->
+    <path d="M22 46 Q20 38 28 34" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.5"/>
   </svg>`,
-  basil: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="40" cy="44" rx="17" ry="22"/>
-    <ellipse cx="22" cy="40" rx="14" ry="19" transform="rotate(-20 22 40)"/>
-    <ellipse cx="58" cy="40" rx="14" ry="19" transform="rotate(20 58 40)"/>
-    <rect x="37" y="62" width="6" height="12" rx="3"/>
-    <path d="M40 48 Q38 38 40 28"/>
+  basil: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Left leaf -->
+    <path d="M40 54 C32 50 22 42 20 32 C18 24 22 18 28 20 C32 22 36 34 38 46Z" fill="#9ED88A" stroke="#6AAE68" stroke-width="1.5"/>
+    <!-- Right leaf -->
+    <path d="M40 54 C48 50 58 42 60 32 C62 24 58 18 52 20 C48 22 44 34 42 46Z" fill="#9ED88A" stroke="#6AAE68" stroke-width="1.5"/>
+    <!-- Center leaf (on top) -->
+    <path d="M40 68 C34 60 30 46 32 34 C34 22 38 16 40 14 C42 16 46 22 48 34 C50 46 46 60 40 68Z" fill="#82C478" stroke="#5A9E58" stroke-width="1.5"/>
+    <!-- Stem -->
+    <path d="M40 68 L40 74" stroke="#6AAE68" stroke-width="3" stroke-linecap="round"/>
   </svg>`,
-  cucumber: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="40" cy="44" rx="14" ry="26"/>
-    <ellipse cx="40" cy="20" rx="9" ry="7"/>
-    <ellipse cx="40" cy="68" rx="9" ry="7"/>
-    <path d="M28 38 Q40 34 52 38"/>
-    <path d="M28 50 Q40 46 52 50"/>
+  cucumber: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Body -->
+    <path d="M28 14 C38 10 56 14 60 28 C64 42 58 66 48 72 C38 76 22 70 18 56 C14 42 18 18 28 14Z" fill="#8ED18A" stroke="#5AAE5A" stroke-width="1.5"/>
+    <!-- Ridge lines -->
+    <path d="M24 30 Q40 26 56 30" stroke="#6AB86A" stroke-width="2" fill="none" opacity="0.4"/>
+    <path d="M22 44 Q40 40 58 44" stroke="#6AB86A" stroke-width="2" fill="none" opacity="0.4"/>
+    <path d="M24 56 Q40 52 56 58" stroke="#6AB86A" stroke-width="2" fill="none" opacity="0.4"/>
+    <!-- Top tip -->
+    <ellipse cx="33" cy="16" rx="7" ry="4" transform="rotate(-30 33 16)" fill="#5AAE5A"/>
+    <!-- Bottom tip -->
+    <ellipse cx="47" cy="70" rx="6" ry="4" transform="rotate(-30 47 70)" fill="#5AAE5A"/>
+    <!-- Highlight -->
+    <path d="M24 28 Q22 20 30 16" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
   </svg>`,
-  strawberry: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M40 70 C24 62 16 48 18 36 C20 26 28 22 40 28 C52 22 60 26 62 36 C64 48 56 62 40 70Z"/>
-    <ellipse cx="30" cy="28" rx="9" ry="7"/>
-    <ellipse cx="50" cy="28" rx="9" ry="7"/>
-    <ellipse cx="40" cy="24" rx="7" ry="6"/>
-    <circle cx="32" cy="44" r="2" fill="#5A7A3A"/>
-    <circle cx="40" cy="51" r="2" fill="#5A7A3A"/>
-    <circle cx="48" cy="44" r="2" fill="#5A7A3A"/>
+  strawberry: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Body -->
+    <path d="M40 72 C22 62 12 46 14 34 C16 22 26 18 40 26 C54 18 64 22 66 34 C68 46 58 62 40 72Z" fill="#F07878" stroke="#C85858" stroke-width="1.5"/>
+    <!-- Leaves -->
+    <path d="M40 28 C38 20 38 12 40 8 C42 12 42 20 40 28Z" fill="#7FC47A" stroke="#5AA050" stroke-width="1.5"/>
+    <path d="M36 28 C28 22 22 14 24 8 C28 10 32 20 36 28Z" fill="#7FC47A" stroke="#5AA050" stroke-width="1.5"/>
+    <path d="M44 28 C52 22 58 14 56 8 C52 10 48 20 44 28Z" fill="#7FC47A" stroke="#5AA050" stroke-width="1.5"/>
+    <!-- Seed dots -->
+    <ellipse cx="30" cy="40" rx="2" ry="2.5" fill="#FCE0D0" stroke="#E06050" stroke-width="1"/>
+    <ellipse cx="40" cy="36" rx="2" ry="2.5" fill="#FCE0D0" stroke="#E06050" stroke-width="1"/>
+    <ellipse cx="50" cy="40" rx="2" ry="2.5" fill="#FCE0D0" stroke="#E06050" stroke-width="1"/>
+    <ellipse cx="35" cy="52" rx="2" ry="2.5" fill="#FCE0D0" stroke="#E06050" stroke-width="1"/>
+    <ellipse cx="45" cy="52" rx="2" ry="2.5" fill="#FCE0D0" stroke="#E06050" stroke-width="1"/>
+    <ellipse cx="40" cy="62" rx="2" ry="2.5" fill="#FCE0D0" stroke="#E06050" stroke-width="1"/>
   </svg>`,
-  lettuce: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="40" cy="46" rx="30" ry="24"/>
-    <ellipse cx="40" cy="44" rx="22" ry="19"/>
-    <ellipse cx="40" cy="43" rx="14" ry="13"/>
-    <path d="M14 42 Q18 28 32 26"/>
-    <path d="M66 42 Q62 28 48 26"/>
+  lettuce: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Outer ruffled layer -->
+    <path d="M12 50 C10 36 18 24 28 20 C20 28 16 38 18 50 C20 60 28 68 40 70 C52 68 60 60 62 50 C64 38 60 28 52 20 C62 24 70 36 68 50 C66 66 56 76 40 76 C24 76 14 66 12 50Z" fill="#C8E8A8" stroke="#90C870" stroke-width="1.5"/>
+    <!-- Mid layer -->
+    <path d="M20 50 C18 38 26 28 40 26 C54 28 62 38 60 50 C58 62 50 70 40 70 C30 70 22 62 20 50Z" fill="#A8D880" stroke="#78B858" stroke-width="1.5"/>
+    <!-- Inner heart -->
+    <path d="M28 50 C28 40 34 32 40 32 C46 32 52 40 52 50 C52 58 46 64 40 64 C34 64 28 58 28 50Z" fill="#88C060" stroke="#60A040" stroke-width="1.5"/>
   </svg>`,
-  spinach: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="40" cy="44" rx="11" ry="20" transform="rotate(-8 40 44)"/>
-    <ellipse cx="24" cy="42" rx="10" ry="17" transform="rotate(-28 24 42)"/>
-    <ellipse cx="56" cy="42" rx="10" ry="17" transform="rotate(28 56 42)"/>
-    <rect x="37" y="60" width="6" height="12" rx="3"/>
+  spinach: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Left leaf -->
+    <path d="M38 60 C28 54 18 44 18 32 C18 22 24 18 30 22 C36 26 38 44 38 60Z" fill="#90D490" stroke="#60B060" stroke-width="1.5"/>
+    <!-- Right leaf -->
+    <path d="M42 60 C52 54 62 44 62 32 C62 22 56 18 50 22 C44 26 42 44 42 60Z" fill="#90D490" stroke="#60B060" stroke-width="1.5"/>
+    <!-- Center tall leaf (on top) -->
+    <path d="M40 70 C36 58 34 44 36 30 C38 20 40 14 40 14 C40 14 42 20 44 30 C46 44 44 58 40 70Z" fill="#78C478" stroke="#50A050" stroke-width="1.5"/>
+    <!-- Root/stem -->
+    <rect x="38" y="68" width="4" height="8" rx="2" fill="#60A060"/>
   </svg>`,
-  pepper: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M40 28 C26 28 18 38 18 50 C18 62 26 70 40 70 C54 70 62 62 62 50 C62 38 54 28 40 28Z"/>
-    <path d="M26 40 C22 34 28 26 36 24 L40 22 L44 24 C52 26 58 34 54 40Z"/>
-    <rect x="37" y="10" width="6" height="16" rx="3"/>
+  pepper: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Left lobe -->
+    <path d="M22 46 C18 34 22 24 30 22 C34 22 38 28 38 38 L38 64 C34 68 26 68 22 60 C18 54 20 50 22 46Z" fill="#7BC878" stroke="#50A050" stroke-width="1.5"/>
+    <!-- Right lobe -->
+    <path d="M58 46 C62 34 58 24 50 22 C46 22 42 28 42 38 L42 64 C46 68 54 68 58 60 C62 54 60 50 58 46Z" fill="#7BC878" stroke="#50A050" stroke-width="1.5"/>
+    <!-- Center lobe (on top) -->
+    <path d="M32 44 C30 32 34 22 40 20 C46 22 50 32 48 44 L46 64 C44 70 36 70 34 64Z" fill="#8ED88A" stroke="#5AAA58" stroke-width="1.5"/>
+    <!-- Cap -->
+    <path d="M30 22 C30 16 34 12 40 12 C46 12 50 16 50 22" stroke="#5A9E58" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- Stem -->
+    <rect x="38" y="6" width="4" height="10" rx="2" fill="#5A9E58"/>
+    <!-- Highlight -->
+    <path d="M26 38 Q24 28 30 24" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
   </svg>`,
-  eggplant: `<svg viewBox="0 0 80 80" fill="none" stroke="#5A7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="40" cy="52" rx="22" ry="18"/>
-    <ellipse cx="40" cy="36" rx="14" ry="12"/>
-    <path d="M28 26 C34 18 46 18 52 26 C50 30 44 28 40 28 C36 28 30 30 28 26Z"/>
-    <rect x="37" y="10" width="6" height="20" rx="3"/>
+  eggplant: `<svg viewBox="0 0 80 80" filter="url(#sketch)" fill="none">
+    <!-- Body -->
+    <path d="M40 72 C24 72 14 60 14 48 C14 36 20 26 30 22 C34 20 46 20 50 22 C60 26 66 36 66 48 C66 60 56 72 40 72Z" fill="#B888D8" stroke="#8858B8" stroke-width="1.5"/>
+    <!-- Upper body lighter -->
+    <path d="M30 24 C36 20 44 20 50 24 C56 28 58 36 56 42 C50 38 30 38 24 42 C22 36 24 28 30 24Z" fill="#C8A0E8" stroke="#9868C8" stroke-width="1" opacity="0.7"/>
+    <!-- Calyx -->
+    <path d="M28 24 C26 16 30 10 36 12 C38 8 42 8 44 12 C50 10 54 16 52 24" fill="#7A9E7A" stroke="#5A8060" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Stem -->
+    <path d="M38 12 C38 6 40 2 40 2 C40 2 42 6 42 12" stroke="#6A8E6A" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <!-- Highlight -->
+    <path d="M22 46 Q20 36 28 30" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.5"/>
   </svg>`
 };
 const BGCOLS = {
@@ -445,14 +495,16 @@ function bnav(active){
   <div class="body" style="padding-top:0;display:flex;flex-direction:column;">
     <div class="splash">
       <div class="splash-box">
-        <!-- line art tomato -->
-        <svg viewBox="0 0 80 80" width="90" height="90" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <ellipse cx="40" cy="52" rx="28" ry="24"/>
-          <path d="M40 32 L35 20 L39 28 L40 32Z"/>
-          <path d="M40 32 L27 22 L34 30 L40 32Z"/>
-          <path d="M40 32 L53 22 L46 30 L40 32Z"/>
-          <path d="M40 32 L45 20 L41 28 L40 32Z"/>
-          <rect x="37" y="10" width="6" height="24" rx="3"/>
+        <!-- colored tomato illustration -->
+        <svg viewBox="0 0 80 80" width="90" height="90" filter="url(#sketch)" fill="none">
+          <path d="M14 52 C14 34 25 24 40 24 C55 24 66 34 66 52 C66 67 55 76 40 76 C25 76 14 67 14 52Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+          <path d="M40 26 L36 14 L40 22Z" fill="rgba(200,240,180,0.85)" stroke="rgba(180,230,160,0.7)" stroke-width="1"/>
+          <path d="M40 26 L26 18 L34 24Z" fill="rgba(200,240,180,0.85)" stroke="rgba(180,230,160,0.7)" stroke-width="1"/>
+          <path d="M40 26 L54 18 L46 24Z" fill="rgba(200,240,180,0.85)" stroke="rgba(180,230,160,0.7)" stroke-width="1"/>
+          <path d="M40 26 L50 14 L42 22Z" fill="rgba(200,240,180,0.85)" stroke="rgba(180,230,160,0.7)" stroke-width="1"/>
+          <path d="M40 26 L30 14 L38 22Z" fill="rgba(200,240,180,0.85)" stroke="rgba(180,230,160,0.7)" stroke-width="1"/>
+          <path d="M40 24 C39 16 40 8 41 6" stroke="rgba(200,240,180,0.9)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M22 46 Q20 38 28 34" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.5"/>
         </svg>
       </div>
       <div class="splash-title">GreenThumb</div>
