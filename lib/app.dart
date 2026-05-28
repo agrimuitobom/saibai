@@ -4,14 +4,14 @@ import 'core/theme/app_theme.dart';
 import 'presentation/router/app_router.dart';
 
 /// アプリケーションのルートウィジェット
-class GreenThumbApp extends StatelessWidget {
-  const GreenThumbApp({super.key});
+class VejiGroApp extends StatelessWidget {
+  const VejiGroApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        title: 'GreenThumb',
+        title: 'ベジグロ',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         // 日本語ロケール設定

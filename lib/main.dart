@@ -19,5 +19,5 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(const GreenThumbApp());
+  runApp(const VejiGroApp());
 }

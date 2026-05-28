@@ -3,7 +3,7 @@ class AppStrings {
   AppStrings._();
 
   // アプリ全般
-  static const String appName = 'GreenThumb';
+  static const String appName = 'ベジグロ';
   static const String appTagline = '家庭菜園をもっと楽しく';
 
   // ナビゲーション

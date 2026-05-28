@@ -318,7 +318,7 @@ class _AppInfo extends StatelessWidget {
           const Icon(Icons.eco, size: 32, color: AppColors.primary),
           const SizedBox(height: 8),
           Text(
-            'GreenThumb',
+            'ベジグロ',
             style: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: 4),
