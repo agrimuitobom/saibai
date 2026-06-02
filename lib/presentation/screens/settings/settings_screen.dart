@@ -328,7 +328,7 @@ class _AppInfo extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '家庭菜園をもっと楽しく',
+            'Grow fresh. Grow happy.',
             style: AppTextStyles.bodySmall,
           ),
         ],

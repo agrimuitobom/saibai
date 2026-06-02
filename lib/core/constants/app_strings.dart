@@ -4,7 +4,7 @@ class AppStrings {
 
   // アプリ全般
   static const String appName = 'ベジグロ';
-  static const String appTagline = '家庭菜園をもっと楽しく';
+  static const String appTagline = 'Grow fresh. Grow happy.';
 
   // ナビゲーション
   static const String navHome = 'ホーム';
