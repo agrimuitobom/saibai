@@ -62,14 +62,13 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
-            // 栽培場所（ワイヤーフレーム準拠：ベランダ・畑・庭・室内）
+            // 栽培場所（ベランダ・室内）
             _SettingsCard(
               title: AppStrings.settingsGrowingPlace,
               children: [
                 _MultiSelectSetting(
                   options: const [
                     AppStrings.settingsBalcony,
-                    AppStrings.settingsField,
                     AppStrings.settingsIndoor,
                   ],
                   selectedOption: settings.growingLocation,
