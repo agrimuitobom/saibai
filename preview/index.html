@@ -352,148 +352,162 @@ body{font-family:'Noto Sans JP',sans-serif;background:#DDD5C8;padding:24px 16px;
 <script>
 const SVGS = {
   tomato: `<svg viewBox="0 0 80 80" fill="none">
-    <ellipse cx="40" cy="50" rx="24" ry="22" fill="#E87870" stroke="#C85858" stroke-width="1.3"/>
-    <path d="M36 28C33 22 27 18 23 20C25 24 31 27 36 28Z" fill="#78B840" stroke="#58A020" stroke-width="0.9"/>
-    <path d="M44 28C47 22 53 18 57 20C55 24 49 27 44 28Z" fill="#78B840" stroke="#58A020" stroke-width="0.9"/>
-    <path d="M40 27C38 20 33 14 29 13C31 17 36 22 40 27Z" fill="#90C848" stroke="#68A030" stroke-width="0.9"/>
-    <path d="M40 27C42 20 47 14 51 13C49 17 44 22 40 27Z" fill="#90C848" stroke="#68A030" stroke-width="0.9"/>
-    <path d="M40 27C38 22 35 17 33 19C35 22 38 25 40 27Z" fill="#78B840" stroke="#58A020" stroke-width="0.9"/>
-    <path d="M40 27C40 19 41 14 42 11" stroke="#58A020" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="40" cy="50" r="24" fill="#E87870" stroke="#C85060" stroke-width="1.2"/>
+    <path d="M40 26C36 21 30 17 25 19 27 23 34 26 40 26Z" fill="#74B03A" stroke="#4E8820" stroke-width="1"/>
+    <path d="M40 26C44 21 50 17 55 19 53 23 46 26 40 26Z" fill="#74B03A" stroke="#4E8820" stroke-width="1"/>
+    <path d="M40 26C39 19 35 13 30 12 32 16 37 21 40 26Z" fill="#8EC84A" stroke="#68A028" stroke-width="1"/>
+    <path d="M40 26C41 19 45 13 50 12 48 16 43 21 40 26Z" fill="#8EC84A" stroke="#68A028" stroke-width="1"/>
+    <path d="M40 26C38 20 36 14 37 12 39 15 40 20 40 26Z" fill="#74B03A" stroke="#4E8820" stroke-width="1"/>
+    <line x1="40" y1="26" x2="40" y2="14" stroke="#4E8820" stroke-width="2.5" stroke-linecap="round"/>
   </svg>`,
+
   eggplant: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M40 17C31 17 22 28 20 44C18 58 24 72 34 76C36 77 38 78 40 78C42 78 44 77 46 76C56 72 62 58 60 44C58 28 49 17 40 17Z" fill="#9878B8" stroke="#7858A0" stroke-width="1.3"/>
-    <path d="M33 19L29 11L33 17Z M40 17L40 9L40 14Z M47 19L51 11L47 17Z M31 18L21 15L28 18Z M49 18L59 15L52 18Z" fill="#5A9028"/>
-    <path d="M40 17C41 11 43 7 45 5" stroke="#5A9028" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M40 14 C30 14 20 24 18 40 C16 56 22 72 34 76 C36 77 38 78 40 78 C42 78 44 77 46 76 C58 72 64 56 62 40 C60 24 50 14 40 14Z" fill="#9070B8" stroke="#7050A0" stroke-width="1.2"/>
+    <path d="M33 16L29 8 32 14ZM40 14L40 6 40 12ZM47 16L51 8 48 14ZM30 17L20 13 27 17ZM50 17L60 13 53 17Z" fill="#5A9028"/>
+    <path d="M40 14 C41 8 43 4 45 2" stroke="#5A9028" stroke-width="2.5" stroke-linecap="round"/>
   </svg>`,
+
   cucumber: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M18 10C27 5 52 12 66 28C72 40 68 54 58 60C46 66 24 62 13 46C7 36 9 17 18 10Z" fill="#4A8840" stroke="#286820" stroke-width="1.3"/>
-    <ellipse cx="18" cy="11" rx="6" ry="4" transform="rotate(-30 18 11)" fill="#D0CE20" stroke="#A8A010" stroke-width="1"/>
-    <circle cx="34" cy="20" r="2" fill="#286820" opacity="0.45"/>
-    <circle cx="50" cy="17" r="2" fill="#286820" opacity="0.45"/>
-    <circle cx="62" cy="28" r="2" fill="#286820" opacity="0.45"/>
-    <circle cx="64" cy="42" r="2" fill="#286820" opacity="0.45"/>
-    <circle cx="56" cy="54" r="2" fill="#286820" opacity="0.45"/>
-    <circle cx="38" cy="58" r="2" fill="#286820" opacity="0.45"/>
-    <circle cx="22" cy="50" r="2" fill="#286820" opacity="0.45"/>
+    <path d="M16 10 C26 4 52 10 66 26 C74 38 70 54 60 60 C48 66 24 62 12 46 C4 34 6 16 16 10Z" fill="#4A8840" stroke="#286820" stroke-width="1.2"/>
+    <ellipse cx="16" cy="10" rx="7" ry="4" transform="rotate(-28 16 10)" fill="#D4D020" stroke="#A8A010" stroke-width="1"/>
+    <circle cx="34" cy="20" r="2" fill="#286820" opacity="0.4"/>
+    <circle cx="50" cy="17" r="2" fill="#286820" opacity="0.4"/>
+    <circle cx="62" cy="28" r="2" fill="#286820" opacity="0.4"/>
+    <circle cx="64" cy="42" r="2" fill="#286820" opacity="0.4"/>
+    <circle cx="56" cy="54" r="2" fill="#286820" opacity="0.4"/>
+    <circle cx="38" cy="58" r="2" fill="#286820" opacity="0.4"/>
+    <circle cx="22" cy="50" r="2" fill="#286820" opacity="0.4"/>
   </svg>`,
+
   pepper: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M22 52C18 38 22 26 30 24C34 22 37 28 37 40L37 66C33 70 25 70 21 62C17 56 20 54 22 52Z" fill="#508050" stroke="#306830" stroke-width="1.2"/>
-    <path d="M58 52C62 38 58 26 50 24C46 22 43 28 43 40L43 66C47 70 55 70 59 62C63 56 60 54 58 52Z" fill="#508050" stroke="#306830" stroke-width="1.2"/>
-    <path d="M28 50C26 36 30 24 40 22C50 24 54 36 52 50L50 66C48 72 32 72 30 66Z" fill="#60A060" stroke="#408048" stroke-width="1.2"/>
-    <path d="M28 24C27 17 33 11 40 11C47 11 53 17 52 24" stroke="#306830" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <rect x="38" y="5" width="4" height="9" rx="2" fill="#306830"/>
+    <path d="M20 52 C16 38 20 26 28 24 C32 22 36 28 36 40 L36 66 C32 70 24 70 20 62 C16 56 18 54 20 52Z" fill="#508050" stroke="#306830" stroke-width="1.2"/>
+    <path d="M60 52 C64 38 60 26 52 24 C48 22 44 28 44 40 L44 66 C48 70 56 70 60 62 C64 56 62 54 60 52Z" fill="#508050" stroke="#306830" stroke-width="1.2"/>
+    <path d="M28 50 C26 36 30 24 40 22 C50 24 54 36 52 50 L50 66 C48 72 32 72 30 66Z" fill="#68A860" stroke="#407848" stroke-width="1.2"/>
+    <path d="M28 24 C27 16 33 10 40 10 C47 10 53 16 52 24" stroke="#306830" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <rect x="38" y="4" width="4" height="9" rx="2" fill="#306830"/>
   </svg>`,
+
   okra: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M36 6C44 6 52 13 52 26C52 50 48 70 43 76C41 80 37 78 35 74C30 68 26 48 26 26C26 13 30 6 36 6Z" fill="#78AA58" stroke="#508038" stroke-width="1.2"/>
-    <line x1="36" y1="8" x2="36" y2="74" stroke="#508038" stroke-width="0.6" opacity="0.3"/>
-    <line x1="43" y1="8" x2="49" y2="70" stroke="#508038" stroke-width="0.6" opacity="0.3"/>
-    <line x1="29" y1="8" x2="23" y2="70" stroke="#508038" stroke-width="0.6" opacity="0.3"/>
-    <path d="M36 6L32-1L35 5Z M36 6L23 1L30 5Z M36 6L49 1L43 5Z M36 6L22 6L28 6Z M36 6L50 6L44 6Z" fill="#3A7830"/>
-    <circle cx="64" cy="54" r="12" fill="#78AA58" stroke="#508038" stroke-width="1.2"/>
-    <path d="M64 44L64 64M55 54L73 54M58 47L70 61M70 47L58 61" stroke="#508038" stroke-width="1" opacity="0.5"/>
+    <path d="M36 6 C44 6 52 14 52 28 C52 52 48 70 43 76 C41 80 37 78 35 74 C30 68 26 50 26 28 C26 14 30 6 36 6Z" fill="#7AAA58" stroke="#508040" stroke-width="1.2"/>
+    <line x1="36" y1="8" x2="36" y2="74" stroke="#508040" stroke-width="0.6" opacity="0.3"/>
+    <line x1="43" y1="8" x2="49" y2="70" stroke="#508040" stroke-width="0.6" opacity="0.3"/>
+    <line x1="29" y1="8" x2="23" y2="70" stroke="#508040" stroke-width="0.6" opacity="0.3"/>
+    <path d="M36 6L32-2 35 5ZM36 6L22 1 30 5ZM36 6L50 1 43 5ZM36 6L21 6 28 6ZM36 6L51 6 45 6Z" fill="#3A7830"/>
+    <circle cx="65" cy="56" r="12" fill="#7AAA58" stroke="#508040" stroke-width="1.2"/>
+    <path d="M65 46L65 66M56 56L74 56M59 49L71 63M71 49L59 63" stroke="#508040" stroke-width="1" opacity="0.5"/>
   </svg>`,
+
   corn: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M23 40C14 33 10 21 12 11C18 15 22 29 24 40Z" fill="#78A840" stroke="#509020" stroke-width="1"/>
-    <path d="M57 40C66 33 70 21 68 11C62 15 58 29 56 40Z" fill="#78A840" stroke="#509020" stroke-width="1"/>
-    <path d="M17 62C8 54 4 42 6 30C12 34 16 48 18 62Z" fill="#90B848" stroke="#60A030" stroke-width="1"/>
-    <path d="M63 62C72 54 76 42 74 30C68 34 64 48 62 62Z" fill="#90B848" stroke="#60A030" stroke-width="1"/>
-    <rect x="28" y="14" width="24" height="54" rx="10" fill="#E8C828" stroke="#C0A010" stroke-width="1.2"/>
-    <line x1="34" y1="14" x2="34" y2="68" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="40" y1="14" x2="40" y2="68" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="46" y1="14" x2="46" y2="68" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="28" y1="22" x2="52" y2="22" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="28" y1="30" x2="52" y2="30" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="28" y1="38" x2="52" y2="38" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="28" y1="46" x2="52" y2="46" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="28" y1="54" x2="52" y2="54" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <line x1="28" y1="62" x2="52" y2="62" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
-    <path d="M30 14C28 8 26 2 24 0M36 14C34 6 34 2 34 0M40 14C40 6 40 2 40 0M44 14C46 8 46 2 48 0M50 14C52 8 54 2 56 0" stroke="#C0A010" stroke-width="1" stroke-linecap="round"/>
+    <path d="M22 42 C14 36 10 22 12 12 C18 16 22 30 24 42Z" fill="#78A840" stroke="#509028" stroke-width="1"/>
+    <path d="M58 42 C66 36 70 22 68 12 C62 16 58 30 56 42Z" fill="#78A840" stroke="#509028" stroke-width="1"/>
+    <path d="M16 62 C8 54 4 42 6 30 C12 34 16 48 18 62Z" fill="#90B848" stroke="#609030" stroke-width="1"/>
+    <path d="M64 62 C72 54 76 42 74 30 C68 34 64 48 62 62Z" fill="#90B848" stroke="#609030" stroke-width="1"/>
+    <rect x="28" y="16" width="24" height="52" rx="10" fill="#E8C828" stroke="#C0A010" stroke-width="1.2"/>
+    <line x1="34" y1="16" x2="34" y2="68" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="40" y1="16" x2="40" y2="68" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="46" y1="16" x2="46" y2="68" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="28" y1="24" x2="52" y2="24" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="28" y1="32" x2="52" y2="32" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="28" y1="40" x2="52" y2="40" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="28" y1="48" x2="52" y2="48" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="28" y1="56" x2="52" y2="56" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <line x1="28" y1="64" x2="52" y2="64" stroke="#C0A010" stroke-width="0.7" opacity="0.4"/>
+    <path d="M30 16C28 8 26 2 24 0M36 16C34 7 33 2 33 0M40 16C40 7 40 2 40 0M44 16C46 9 47 2 49 0M50 16C52 9 54 2 56 0" stroke="#C0A010" stroke-width="1" stroke-linecap="round"/>
   </svg>`,
+
   daikon: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M28 22C21 22 14 32 14 48C14 64 23 76 40 78C57 76 66 64 66 48C66 32 59 22 52 22Z" fill="#F2F0E6" stroke="#D4C8A8" stroke-width="1.2"/>
-    <path d="M22 44Q40 39 58 44" stroke="#D0C4A0" stroke-width="0.8" opacity="0.5" fill="none"/>
-    <path d="M18 56Q40 51 62 56" stroke="#D0C4A0" stroke-width="0.8" opacity="0.5" fill="none"/>
-    <path d="M20 68Q40 63 60 68" stroke="#D0C4A0" stroke-width="0.7" opacity="0.4" fill="none"/>
-    <path d="M40 78C40 82 40 84 40 86" stroke="#C4B898" stroke-width="1.5" stroke-linecap="round"/>
-    <path d="M40 22C34 12 26 7 18 5C20 9 30 14 38 22Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
-    <path d="M40 22C46 12 54 7 62 5C60 9 50 14 42 22Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
-    <path d="M40 22C32 8 22 7 12 7C14 11 26 13 38 22Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
-    <path d="M40 22C48 8 58 7 68 7C66 11 54 13 42 22Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
+    <path d="M28 24 C20 24 13 34 13 50 C13 66 22 78 40 78 C58 78 67 66 67 50 C67 34 60 24 52 24Z" fill="#F2F0E8" stroke="#D8CEB8" stroke-width="1.2"/>
+    <path d="M22 46Q40 41 58 46" stroke="#D0C4A0" stroke-width="0.8" opacity="0.5" fill="none"/>
+    <path d="M18 58Q40 53 62 58" stroke="#D0C4A0" stroke-width="0.8" opacity="0.5" fill="none"/>
+    <path d="M20 70Q40 65 60 70" stroke="#D0C4A0" stroke-width="0.7" opacity="0.4" fill="none"/>
+    <path d="M40 78L40 86" stroke="#C4B898" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M40 24C34 13 25 7 16 5 18 9 29 15 38 24Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
+    <path d="M40 24C46 13 55 7 64 5 62 9 51 15 42 24Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
+    <path d="M40 24C32 9 21 7 11 7 13 12 26 14 38 24Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
+    <path d="M40 24C48 9 59 7 69 7 67 12 54 14 42 24Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
   </svg>`,
+
   carrot: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M20 22C20 15 29 10 40 10C51 10 60 15 60 22C60 50 52 72 40 78C28 72 20 50 20 22Z" fill="#F08840" stroke="#D06820" stroke-width="1.2"/>
-    <path d="M26 32Q40 28 54 32" stroke="#D06820" stroke-width="0.8" opacity="0.4" fill="none"/>
-    <path d="M23 44Q40 40 57 44" stroke="#D06820" stroke-width="0.8" opacity="0.4" fill="none"/>
-    <path d="M24 56Q40 52 56 56" stroke="#D06820" stroke-width="0.8" opacity="0.4" fill="none"/>
-    <path d="M40 10C37 2 33-2 28-3C30 2 36 6 38 10Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
-    <path d="M40 10C43 2 47-2 52-3C50 2 44 6 42 10Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
-    <path d="M40 10C34 0 25-2 16-1C18 3 28 6 38 10Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
-    <path d="M40 10C46 0 55-2 64-1C62 3 52 6 42 10Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
-    <path d="M40 10C37 2 35-2 34-4C36 0 38 6 40 10Z" fill="#78B038" stroke="#508018" stroke-width="0.8"/>
+    <path d="M20 24 C20 16 29 10 40 10 C51 10 60 16 60 24 C60 52 52 74 40 80 C28 74 20 52 20 24Z" fill="#F08840" stroke="#D06820" stroke-width="1.2"/>
+    <path d="M25 34Q40 29 55 34" stroke="#D06820" stroke-width="0.8" opacity="0.4" fill="none"/>
+    <path d="M22 46Q40 41 58 46" stroke="#D06820" stroke-width="0.8" opacity="0.4" fill="none"/>
+    <path d="M23 58Q40 53 57 58" stroke="#D06820" stroke-width="0.8" opacity="0.4" fill="none"/>
+    <path d="M40 10C37 2 33-3 27-4 29 1 36 6 38 10Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
+    <path d="M40 10C43 2 47-3 53-4 51 1 44 6 42 10Z" fill="#78B038" stroke="#508018" stroke-width="1"/>
+    <path d="M40 10C34 0 24-2 15-1 17 4 28 7 38 10Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
+    <path d="M40 10C46 0 56-2 65-1 63 4 52 7 42 10Z" fill="#98C858" stroke="#68A030" stroke-width="1"/>
+    <path d="M40 10C37 2 35-2 34-4 36 0 39 6 40 10Z" fill="#78B038" stroke="#508018" stroke-width="0.8"/>
   </svg>`,
+
   onion: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M40 18C55 18 68 32 68 50C68 66 55 76 40 76C25 76 12 66 12 50C12 32 25 18 40 18Z" fill="#C89048" stroke="#A87028" stroke-width="1.2"/>
-    <path d="M22 38C25 30 32 24 40 24C48 24 55 30 58 38" stroke="#A87028" stroke-width="1" fill="none" opacity="0.5"/>
-    <path d="M17 52C17 42 27 32 40 32C53 32 63 42 63 52" stroke="#A87028" stroke-width="0.8" fill="none" opacity="0.3"/>
+    <ellipse cx="40" cy="50" rx="28" ry="26" fill="#C89048" stroke="#A87028" stroke-width="1.2"/>
+    <path d="M20 40 C23 31 31 25 40 25 C49 25 57 31 60 40" stroke="#A87028" stroke-width="1" fill="none" opacity="0.5"/>
+    <path d="M15 54 C15 44 26 34 40 34 C54 34 65 44 65 54" stroke="#A87028" stroke-width="0.8" fill="none" opacity="0.3"/>
     <path d="M34 18C36 9 38 4 40 4C42 4 44 9 46 18Z" fill="#B88040" stroke="#A87028" stroke-width="1"/>
-    <ellipse cx="40" cy="76" rx="11" ry="3" fill="#987040"/>
-    <path d="M33 76C31 80 29 83 27 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
-    <path d="M37 77L36 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
+    <ellipse cx="40" cy="76" rx="12" ry="3.5" fill="#987040"/>
+    <path d="M32 76C30 80 28 83 26 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M36 77L35 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
     <path d="M40 77L40 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
-    <path d="M43 77L44 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
-    <path d="M47 76C49 80 51 83 53 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M44 77L45 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M48 76C50 80 52 83 54 85" stroke="#987040" stroke-width="1.2" stroke-linecap="round"/>
   </svg>`,
+
   garlic: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M38 18C51 18 62 28 62 44C62 58 51 67 38 67C25 67 14 58 14 44C14 28 25 18 38 18Z" fill="#EDEAD4" stroke="#C8C0A0" stroke-width="1.2"/>
-    <path d="M38 18C34 18 29 26 29 38C29 49 34 56 38 56C42 56 47 49 47 38C47 26 42 18 38 18Z" fill="#F5F2E4" stroke="#C8C0A0" stroke-width="1"/>
-    <path d="M21 22C16 26 13 34 13 44C13 51 15 57 19 61C19 51 19 36 21 22Z" fill="#F5F2E4" stroke="#C8C0A0" stroke-width="1"/>
-    <path d="M55 22C60 26 63 34 63 44C63 51 61 57 57 61C57 51 57 36 55 22Z" fill="#F5F2E4" stroke="#C8C0A0" stroke-width="1"/>
-    <path d="M30 14C30 9 34 5 38 5C42 5 46 9 46 14" stroke="#8A9848" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M38 14C38 7 38 3 38 1" stroke="#6A8830" stroke-width="2.5" stroke-linecap="round"/>
-    <ellipse cx="67" cy="55" rx="10" ry="14" transform="rotate(-15 67 55)" fill="#EDEAD4" stroke="#C8C0A0" stroke-width="1.2"/>
-    <path d="M63 46C61 49 59 53 59 57C59 62 61 66 63 69" stroke="#C8C0A0" stroke-width="0.8" fill="none" opacity="0.5"/>
-    <path d="M65 42C66 40 67 38 68 38C69 39 69 41 68 43Z" fill="#8A9848"/>
+    <ellipse cx="36" cy="46" rx="22" ry="22" fill="#EDEAD4" stroke="#C8C0A0" stroke-width="1.2"/>
+    <path d="M36 24C32 24 27 32 27 44C27 55 32 62 36 62C40 62 45 55 45 44C45 32 40 24 36 24Z" fill="#F5F2E4" stroke="#C8C0A0" stroke-width="1"/>
+    <path d="M19 28C14 32 11 40 11 50C11 57 13 63 17 67C17 57 17 42 19 28Z" fill="#F5F2E4" stroke="#C8C0A0" stroke-width="1"/>
+    <path d="M53 28C58 32 61 40 61 50C61 57 59 63 55 67C55 57 55 42 53 28Z" fill="#F5F2E4" stroke="#C8C0A0" stroke-width="1"/>
+    <path d="M28 20C28 15 32 11 36 11C40 11 44 15 44 20" stroke="#8A9848" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M36 20C36 13 36 9 36 7" stroke="#6A8830" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="67" cy="58" rx="11" ry="16" transform="rotate(-15 67 58)" fill="#EDEAD4" stroke="#C8C0A0" stroke-width="1.2"/>
+    <path d="M63 48C61 51 59 56 59 61C59 66 61 70 64 73" stroke="#C8C0A0" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M66 44C67 42 68 40 69 40C70 41 70 43 69 45Z" fill="#8A9848"/>
   </svg>`,
+
   potato: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M28 12C44 10 62 22 62 40C62 56 48 68 32 68C16 68 4 56 6 38C8 22 16 14 28 12Z" fill="#C8A870" stroke="#A88848" stroke-width="1.2"/>
-    <circle cx="14" cy="40" r="3.5" fill="#8A6840" stroke="#6A5030" stroke-width="0.8"/>
-    <line x1="14" y1="37" x2="12" y2="33" stroke="#6A5030" stroke-width="1.2" stroke-linecap="round"/>
-    <circle cx="38" cy="13" r="3.5" fill="#8A6840" stroke="#6A5030" stroke-width="0.8"/>
-    <line x1="38" y1="10" x2="38" y2="6" stroke="#6A5030" stroke-width="1.2" stroke-linecap="round"/>
-    <circle cx="56" cy="48" r="3.5" fill="#8A6840" stroke="#6A5030" stroke-width="0.8"/>
-    <line x1="60" y1="48" x2="64" y2="46" stroke="#6A5030" stroke-width="1.2" stroke-linecap="round"/>
-    <circle cx="67" cy="68" r="12" fill="#D8BE98" stroke="#A88848" stroke-width="1.2"/>
-    <circle cx="67" cy="68" r="7" fill="#EAD4B0" stroke="#A88848" stroke-width="0.7" opacity="0.6"/>
+    <path d="M26 14 C42 10 62 22 64 40 C66 58 50 70 34 70 C18 70 4 58 6 38 C8 22 16 16 26 14Z" fill="#C8A870" stroke="#A88848" stroke-width="1.2"/>
+    <circle cx="13" cy="42" r="4" fill="#8A6840" stroke="#6A5030" stroke-width="0.8"/>
+    <line x1="13" y1="38" x2="11" y2="34" stroke="#6A5030" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="36" cy="12" r="4" fill="#8A6840" stroke="#6A5030" stroke-width="0.8"/>
+    <line x1="36" y1="8" x2="36" y2="4" stroke="#6A5030" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="58" cy="48" r="4" fill="#8A6840" stroke="#6A5030" stroke-width="0.8"/>
+    <line x1="62" y1="48" x2="66" y2="46" stroke="#6A5030" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="68" cy="68" r="13" fill="#D8BE98" stroke="#A88848" stroke-width="1.2"/>
+    <circle cx="68" cy="68" r="8" fill="#EAD4B0" stroke="#A88848" stroke-width="0.7" opacity="0.7"/>
   </svg>`,
+
   sweetpotato: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M42 70C26 72 8 60 6 44C4 30 16 14 32 10C39 8 48 10 55 16C67 24 71 40 69 56C67 66 56 68 42 70Z" fill="#886090" stroke="#684878" stroke-width="1.2"/>
-    <path d="M32 10C28 6 26 2 28-1C30 2 30 7 32 10Z" fill="#5A9028" stroke="#3A7018" stroke-width="0.8"/>
-    <path d="M39 9C39 5 39 1 39-1C40 1 41 5 41 9Z" fill="#5A9028" stroke="#3A7018" stroke-width="0.8"/>
-    <path d="M46 11C49 7 51 3 49 0C47 3 47 7 46 11Z" fill="#5A9028" stroke="#3A7018" stroke-width="0.8"/>
-    <ellipse cx="68" cy="66" rx="14" ry="12" fill="#F0B840" stroke="#D09020" stroke-width="1.2"/>
-    <ellipse cx="68" cy="66" rx="9" ry="7.5" fill="#F8D070" stroke="#D09020" stroke-width="0.8"/>
-    <line x1="68" y1="55" x2="68" y2="77" stroke="#D09020" stroke-width="0.6" opacity="0.4"/>
-    <line x1="55" y1="66" x2="81" y2="66" stroke="#D09020" stroke-width="0.6" opacity="0.4"/>
+    <path d="M42 70 C26 74 7 60 5 44 C3 28 16 12 32 10 C40 8 49 10 57 18 C70 28 72 44 70 58 C68 68 56 68 42 70Z" fill="#886090" stroke="#684878" stroke-width="1.2"/>
+    <path d="M32 10C28 6 26 1 28-2C30 2 30 7 32 10Z" fill="#5A9028" stroke="#3A7018" stroke-width="0.8"/>
+    <path d="M39 9C39 5 39 1 39-1C40 2 41 5 41 9Z" fill="#5A9028" stroke="#3A7018" stroke-width="0.8"/>
+    <path d="M46 11C49 7 52 3 50-1C47 3 47 7 46 11Z" fill="#5A9028" stroke="#3A7018" stroke-width="0.8"/>
+    <ellipse cx="69" cy="66" rx="14" ry="12" fill="#F0B840" stroke="#D09020" stroke-width="1.2"/>
+    <ellipse cx="69" cy="66" rx="9" ry="7" fill="#F8D070" stroke="#D09020" stroke-width="0.7"/>
+    <line x1="69" y1="55" x2="69" y2="77" stroke="#D09020" stroke-width="0.6" opacity="0.4"/>
+    <line x1="56" y1="66" x2="82" y2="66" stroke="#D09020" stroke-width="0.6" opacity="0.4"/>
   </svg>`,
+
   cabbage: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M6 48C4 30 18 14 30 10C18 22 14 40 18 56C22 68 32 78 40 80C24 78 8 66 6 48Z" fill="#A8D870" stroke="#78A848" stroke-width="1"/>
-    <path d="M74 48C76 30 62 14 50 10C62 22 66 40 62 56C58 68 48 78 40 80C56 78 72 66 74 48Z" fill="#A8D870" stroke="#78A848" stroke-width="1"/>
+    <path d="M5 48C3 30 18 14 30 10C18 22 14 40 18 56C22 70 32 78 40 80C24 78 7 66 5 48Z" fill="#A8D870" stroke="#78A848" stroke-width="1"/>
+    <path d="M75 48C77 30 62 14 50 10C62 22 66 40 62 56C58 70 48 78 40 80C56 78 73 66 75 48Z" fill="#A8D870" stroke="#78A848" stroke-width="1"/>
     <circle cx="40" cy="50" r="28" fill="#88C858" stroke="#60A030" stroke-width="1.2"/>
     <circle cx="40" cy="50" r="21" fill="#70B040" stroke="#489028" stroke-width="1"/>
     <circle cx="40" cy="50" r="13" fill="#5A9830" stroke="#388020" stroke-width="0.8"/>
-    <path d="M16 46Q40 40 64 46" stroke="#60A030" stroke-width="0.7" fill="none" opacity="0.4"/>
-    <path d="M13 57Q40 51 67 57" stroke="#60A030" stroke-width="0.7" fill="none" opacity="0.35"/>
+    <path d="M15 46Q40 40 65 46" stroke="#60A030" stroke-width="0.7" fill="none" opacity="0.4"/>
+    <path d="M12 57Q40 51 68 57" stroke="#60A030" stroke-width="0.7" fill="none" opacity="0.35"/>
   </svg>`,
+
   lettuce: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M8 50C4 34 14 16 27 12C14 27 13 46 18 60C22 70 32 78 40 80C24 76 12 65 8 50Z" fill="#A8E070" stroke="#70C040" stroke-width="1"/>
-    <path d="M72 50C76 34 66 16 53 12C66 27 67 46 62 60C58 70 48 78 40 80C56 76 68 65 72 50Z" fill="#A8E070" stroke="#70C040" stroke-width="1"/>
-    <path d="M12 60C6 44 14 26 27 19C14 34 16 54 22 66C26 74 34 80 40 80C26 76 16 70 12 60Z" fill="#C0EC88" stroke="#80D050" stroke-width="0.8"/>
-    <path d="M68 60C74 44 66 26 53 19C66 34 64 54 58 66C54 74 46 80 40 80C54 76 64 70 68 60Z" fill="#C0EC88" stroke="#80D050" stroke-width="0.8"/>
+    <path d="M7 50C3 34 14 16 27 12C13 27 13 47 18 61C22 72 32 79 40 80C24 76 11 65 7 50Z" fill="#A8E070" stroke="#70C040" stroke-width="1"/>
+    <path d="M73 50C77 34 66 16 53 12C67 27 67 47 62 61C58 72 48 79 40 80C56 76 69 65 73 50Z" fill="#A8E070" stroke="#70C040" stroke-width="1"/>
+    <path d="M11 62C5 44 13 26 27 19C13 35 15 55 21 67C25 75 34 80 40 80C26 76 15 71 11 62Z" fill="#BCEC88" stroke="#80D050" stroke-width="0.8"/>
+    <path d="M69 62C75 44 67 26 53 19C67 35 65 55 59 67C55 75 46 80 40 80C54 76 65 71 69 62Z" fill="#BCEC88" stroke="#80D050" stroke-width="0.8"/>
     <ellipse cx="40" cy="54" rx="26" ry="24" fill="#78C848" stroke="#50A020" stroke-width="1.2"/>
     <ellipse cx="40" cy="54" rx="18" ry="16" fill="#60B030" stroke="#388020" stroke-width="1"/>
     <ellipse cx="40" cy="54" rx="10" ry="9" fill="#4A9820" stroke="#289018" stroke-width="0.8"/>
     <path d="M16 50Q40 44 64 50" stroke="#50A020" stroke-width="0.7" fill="none" opacity="0.4"/>
   </svg>`,
+
   spinach: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M36 62C22 54 10 38 12 22C14 12 24 8 30 16C32 21 34 40 36 62Z" fill="#4A9038" stroke="#2A7018" stroke-width="1.2"/>
     <path d="M20 34C18 24 22 14 28 12" stroke="#2A7018" stroke-width="0.7" fill="none" opacity="0.5"/>
@@ -505,6 +519,7 @@ const SVGS = {
     <path d="M40 74L40 82" stroke="#C85050" stroke-width="3" stroke-linecap="round"/>
     <path d="M44 62C46 68 48 74 50 80" stroke="#C85050" stroke-width="2.5" stroke-linecap="round"/>
   </svg>`,
+
   komatsuna: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M36 60C22 52 10 36 12 20C14 10 24 6 30 14C32 19 34 38 36 60Z" fill="#3A8830" stroke="#207010" stroke-width="1.2"/>
     <path d="M44 60C58 52 70 36 68 20C66 10 56 6 50 14C48 19 46 38 44 60Z" fill="#3A8830" stroke="#207010" stroke-width="1.2"/>
@@ -514,25 +529,28 @@ const SVGS = {
     <path d="M40 70L40 80" stroke="#F0F0E0" stroke-width="3.5" stroke-linecap="round"/>
     <path d="M44 60C46 66 48 72 50 78" stroke="#F0F0E0" stroke-width="3" stroke-linecap="round"/>
   </svg>`,
+
   bokchoy: `<svg viewBox="0 0 80 80" fill="none">
-    <path d="M23 72C19 64 17 52 19 42C21 31 27 25 33 27C35 29 35 45 33 62L31 72Z" fill="#EBE7CC" stroke="#C5BFA2" stroke-width="1.2"/>
-    <path d="M57 72C61 64 63 52 61 42C59 31 53 25 47 27C45 29 45 45 47 62L49 72Z" fill="#EBE7CC" stroke="#C5BFA2" stroke-width="1.2"/>
+    <path d="M23 72C19 64 17 52 19 42C21 31 27 25 33 27C35 29 35 46 33 62L31 72Z" fill="#EBE7CC" stroke="#C5BFA2" stroke-width="1.2"/>
+    <path d="M57 72C61 64 63 52 61 42C59 31 53 25 47 27C45 29 45 46 47 62L49 72Z" fill="#EBE7CC" stroke="#C5BFA2" stroke-width="1.2"/>
     <path d="M33 72C31 62 31 46 33 30C35 22 40 17 40 17C40 17 45 22 47 30C49 46 49 62 47 72Z" fill="#F2EED8" stroke="#CBC6A6" stroke-width="1.2"/>
     <path d="M28 28C18 22 12 14 14 6C18 10 24 22 28 28Z" fill="#3A8030" stroke="#207018" stroke-width="1"/>
     <path d="M52 28C62 22 68 14 66 6C62 10 56 22 52 28Z" fill="#3A8030" stroke="#207018" stroke-width="1"/>
     <path d="M40 17C34 9 28 2 26 0C28 4 34 11 38 17Z" fill="#4A9040" stroke="#309028" stroke-width="1"/>
     <path d="M40 17C46 9 52 2 54 0C52 4 46 11 42 17Z" fill="#4A9040" stroke="#309028" stroke-width="1"/>
   </svg>`,
+
   napacabbage: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M40 8C27 8 18 22 18 42C18 62 27 76 40 78C53 76 62 62 62 42C62 22 53 8 40 8Z" fill="#A8C870" stroke="#78A040" stroke-width="1.2"/>
-    <path d="M24 36C23 26 27 17 36 13C27 22 25 34 27 48C27 60 32 70 37 74C28 68 23 58 23 47Z" fill="#ECF3D8" stroke="#A8B890" stroke-width="1"/>
-    <path d="M56 36C57 26 53 17 44 13C53 22 55 34 53 48C53 60 48 70 43 74C52 68 57 58 57 47Z" fill="#ECF3D8" stroke="#A8B890" stroke-width="1"/>
+    <path d="M24 36C23 26 27 17 36 13C27 22 25 34 27 48C27 60 32 70 37 74C28 68 23 57 23 46Z" fill="#ECF3D8" stroke="#A8B890" stroke-width="1"/>
+    <path d="M56 36C57 26 53 17 44 13C53 22 55 34 53 48C53 60 48 70 43 74C52 68 57 57 57 46Z" fill="#ECF3D8" stroke="#A8B890" stroke-width="1"/>
     <line x1="32" y1="12" x2="32" y2="74" stroke="#88A858" stroke-width="0.8" opacity="0.35"/>
     <line x1="40" y1="8" x2="40" y2="78" stroke="#88A858" stroke-width="0.8" opacity="0.35"/>
     <line x1="48" y1="12" x2="48" y2="74" stroke="#88A858" stroke-width="0.8" opacity="0.35"/>
     <path d="M19 40Q40 35 61 40" stroke="#88A858" stroke-width="0.7" fill="none" opacity="0.4"/>
     <path d="M18 52Q40 47 62 52" stroke="#88A858" stroke-width="0.7" fill="none" opacity="0.35"/>
   </svg>`,
+
   pumpkin: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M8 46C8 28 20 18 30 18C26 32 24 58 26 74C16 66 8 56 8 46Z" fill="#3E5828" opacity="0.85"/>
     <path d="M72 46C72 28 60 18 50 18C54 32 56 58 54 74C64 66 72 56 72 46Z" fill="#3E5828" opacity="0.85"/>
@@ -544,6 +562,7 @@ const SVGS = {
     <path d="M40 18C40 11 42 7 44 3" stroke="#8A5820" stroke-width="4" stroke-linecap="round"/>
     <path d="M44 3C46-1 51-1 53 3C51 3 47 3 44 3" stroke="#8A5820" stroke-width="2" stroke-linecap="round"/>
   </svg>`,
+
   negi: `<svg viewBox="0 0 80 80" fill="none">
     <rect x="22" y="38" width="11" height="40" rx="5" fill="#EAE6CC" stroke="#B4B090" stroke-width="1.2"/>
     <rect x="22" y="6" width="11" height="36" rx="5" fill="#78A840" stroke="#509020" stroke-width="1.2"/>
@@ -562,6 +581,7 @@ const SVGS = {
     <path d="M54 78L54 86" stroke="#B4B090" stroke-width="1.2" stroke-linecap="round"/>
     <path d="M60 78C62 82 64 84 66 86" stroke="#B4B090" stroke-width="1.2" stroke-linecap="round"/>
   </svg>`,
+
   shiso: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M40 72C33 65 8 55 5 36C3 22 12 8 22 8C28 6 36 12 40 22C44 12 52 6 58 8C68 8 77 22 75 36C72 55 47 65 40 72Z" fill="#88C868" stroke="#60A848" stroke-width="1.2"/>
     <path d="M9 46L5 42L11 38" stroke="#60A848" stroke-width="0.9"/>
@@ -577,6 +597,7 @@ const SVGS = {
     <path d="M40 56C54 50 68 46 75 50" stroke="#3A8028" stroke-width="0.7" fill="none" opacity="0.35"/>
     <path d="M40 72L40 80" stroke="#60A848" stroke-width="2.5" stroke-linecap="round"/>
   </svg>`,
+
   peas: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M14 44C10 29 16 14 27 8C38 3 50 8 56 18C64 30 62 46 56 58C50 66 40 70 30 70C20 72 13 59 13 48Z" fill="#88B848" stroke="#589030" stroke-width="1.2"/>
     <circle cx="28" cy="28" r="9" fill="#A8CC68" stroke="#78A840" stroke-width="1"/>
@@ -586,15 +607,17 @@ const SVGS = {
     <circle cx="64" cy="64" r="9" fill="#A8CC68" stroke="#78A840" stroke-width="1.2"/>
     <circle cx="78" cy="70" r="9" fill="#A8CC68" stroke="#78A840" stroke-width="1.2"/>
   </svg>`,
+
   turnip: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M40 22C25 22 12 33 12 50C12 67 24 78 40 78C56 78 68 67 68 50C68 33 55 22 40 22Z" fill="#F2EAE8" stroke="#D4B6B6" stroke-width="1.2"/>
     <path d="M40 22C24 22 12 29 12 42C12 55 25 62 40 62C55 62 68 55 68 42C68 29 56 22 40 22Z" fill="#D87878" stroke="#B85858" stroke-width="1.2"/>
-    <path d="M40 78C40 82 40 84 40 86" stroke="#C4B0B0" stroke-width="2" stroke-linecap="round"/>
+    <path d="M40 78L40 86" stroke="#C4B0B0" stroke-width="2" stroke-linecap="round"/>
     <path d="M40 22C38 14 35 8 30 6C32 10 36 15 38 22Z" fill="#68A038" stroke="#489018" stroke-width="1"/>
     <path d="M40 22C42 14 45 8 50 6C48 10 44 15 42 22Z" fill="#68A038" stroke="#489018" stroke-width="1"/>
     <path d="M40 22C34 10 25 7 16 7C18 11 28 14 38 22Z" fill="#88C050" stroke="#60A028" stroke-width="1"/>
     <path d="M40 22C46 10 55 7 64 7C62 11 52 14 42 22Z" fill="#88C050" stroke="#60A028" stroke-width="1"/>
   </svg>`,
+
   broccoli: `<svg viewBox="0 0 80 80" fill="none">
     <rect x="34" y="54" width="12" height="22" rx="5" fill="#7AB040" stroke="#58A020" stroke-width="1.2"/>
     <path d="M34 56C22 52 13 45 12 36" stroke="#7AB040" stroke-width="9" stroke-linecap="round"/>
@@ -613,15 +636,15 @@ const SVGS = {
     <circle cx="20" cy="20" r="7" fill="#60A850"/>
     <circle cx="60" cy="20" r="7" fill="#60A850"/>
   </svg>`,
+
   basil: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M36 60C26 53 14 40 16 26C18 14 28 10 35 18C37 22 37 42 36 60Z" fill="#90D878" stroke="#60A848" stroke-width="1.2"/>
-    <path d="M22 30C20 22 22 14 28 11" stroke="#60A848" stroke-width="0.8" fill="none" opacity="0.5"/>
     <path d="M44 60C54 53 66 40 64 26C62 14 52 10 45 18C43 22 43 42 44 60Z" fill="#90D878" stroke="#60A848" stroke-width="1.2"/>
-    <path d="M58 30C60 22 58 14 52 11" stroke="#60A848" stroke-width="0.8" fill="none" opacity="0.5"/>
     <path d="M40 70C32 59 26 44 28 28C30 16 34 10 40 8C46 10 50 16 52 28C54 44 48 59 40 70Z" fill="#78C060" stroke="#50A030" stroke-width="1.2"/>
     <line x1="40" y1="68" x2="40" y2="10" stroke="#50A030" stroke-width="0.7" opacity="0.35"/>
     <path d="M40 70L40 78" stroke="#60A840" stroke-width="3" stroke-linecap="round"/>
   </svg>`,
+
   strawberry: `<svg viewBox="0 0 80 80" fill="none">
     <path d="M40 76C19 65 7 46 9 29C11 16 22 10 36 17C38 19 40 21 40 21C40 21 42 19 44 17C58 10 69 16 71 29C73 46 61 65 40 76Z" fill="#E85858" stroke="#C04040" stroke-width="1.2"/>
     <path d="M40 21C38 13 38 5 40 2C42 5 42 13 40 21Z" fill="#5A9040" stroke="#3A7020" stroke-width="1"/>
