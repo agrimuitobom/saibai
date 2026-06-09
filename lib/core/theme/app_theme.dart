@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
 
 class AppTheme {
   AppTheme._();
 
   static ThemeData get lightTheme {
+    final baseTextTheme = GoogleFonts.notoSansJpTextTheme();
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.light,
-        background: AppColors.background,
         surface: AppColors.surface,
         primary: AppColors.primary,
         secondary: AppColors.accent,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: AppColors.textPrimary,
         onSurface: AppColors.textPrimary,
       ),
       scaffoldBackgroundColor: AppColors.background,
-      fontFamily: 'NotoSansJP',
+      textTheme: baseTextTheme,
 
       // AppBar
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontFamily: 'NotoSansJP',
+        titleTextStyle: GoogleFonts.notoSansJp(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: Colors.white,
@@ -56,8 +56,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontFamily: 'NotoSansJP',
+          textStyle: GoogleFonts.notoSansJp(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -73,8 +72,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontFamily: 'NotoSansJP',
+          textStyle: GoogleFonts.notoSansJp(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -85,8 +83,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
-          textStyle: const TextStyle(
-            fontFamily: 'NotoSansJP',
+          textStyle: GoogleFonts.notoSansJp(
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -105,7 +102,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.divider, width: 1),
@@ -122,32 +120,28 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
-        hintStyle: const TextStyle(
-          fontFamily: 'NotoSansJP',
+        hintStyle: GoogleFonts.notoSansJp(
           fontSize: 14,
           color: AppColors.textLight,
         ),
-        labelStyle: const TextStyle(
-          fontFamily: 'NotoSansJP',
+        labelStyle: GoogleFonts.notoSansJp(
           fontSize: 14,
           color: AppColors.textSecondary,
         ),
       ),
 
       // BottomNavigationBar
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppColors.navBackground,
         selectedItemColor: AppColors.navSelected,
         unselectedItemColor: AppColors.navUnselected,
         type: BottomNavigationBarType.fixed,
         elevation: 12,
-        selectedLabelStyle: TextStyle(
-          fontFamily: 'NotoSansJP',
+        selectedLabelStyle: GoogleFonts.notoSansJp(
           fontSize: 10,
           fontWeight: FontWeight.w600,
         ),
-        unselectedLabelStyle: TextStyle(
-          fontFamily: 'NotoSansJP',
+        unselectedLabelStyle: GoogleFonts.notoSansJp(
           fontSize: 10,
           fontWeight: FontWeight.w400,
         ),
@@ -157,8 +151,7 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.background,
         selectedColor: AppColors.primary,
-        labelStyle: const TextStyle(
-          fontFamily: 'NotoSansJP',
+        labelStyle: GoogleFonts.notoSansJp(
           fontSize: 13,
           fontWeight: FontWeight.w500,
         ),
@@ -177,14 +170,14 @@ class AppTheme {
 
       // Switch
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primary;
           }
           return Colors.grey.shade400;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryLight.withOpacity(0.5);
           }
           return Colors.grey.shade200;
@@ -197,14 +190,12 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'NotoSansJP',
+        titleTextStyle: GoogleFonts.notoSansJp(
           fontSize: 18,
           fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,
         ),
-        contentTextStyle: const TextStyle(
-          fontFamily: 'NotoSansJP',
+        contentTextStyle: GoogleFonts.notoSansJp(
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.textPrimary,
@@ -214,8 +205,7 @@ class AppTheme {
       // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.textPrimary,
-        contentTextStyle: const TextStyle(
-          fontFamily: 'NotoSansJP',
+        contentTextStyle: GoogleFonts.notoSansJp(
           fontSize: 14,
           color: Colors.white,
         ),
