@@ -14,60 +14,34 @@ dependencies:
 
   # 状態管理
   flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
 
   # ナビゲーション
   go_router: ^13.2.0
 
   # ネットワーク
-  dio: ^5.4.3+1
-  retrofit: ^4.1.0
-
-  # AI / Gemini API
-  google_generative_ai: ^0.4.6
+  http: ^1.1.0
 
   # ローカルDB
-  sqflite: ^2.3.3
-  path: ^1.9.0
+  shared_preferences: ^2.2.3
 
   # 画像関連
   image_picker: ^1.1.2
-  cached_network_image: ^3.3.1
-
-  # カメラ
-  camera: ^0.10.5+9
-
-  # 通知
-  flutter_local_notifications: ^17.1.2
 
   # ユーティリティ
   intl: ^0.19.0
-  shared_preferences: ^2.2.3
-  freezed_annotation: ^2.4.1
-  json_annotation: ^4.9.0
-  equatable: ^2.0.5
   uuid: ^4.4.0
 
+  # カレンダー
+  table_calendar: ^3.0.9
+
   # UI
-  flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.1
-  fl_chart: ^0.67.0
-  shimmer: ^3.0.0
-  lottie: ^3.1.0
 
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # コード生成
-  build_runner: ^2.4.9
-  riverpod_generator: ^2.4.3
-  freezed: ^2.5.2
-  json_serializable: ^6.8.0
-  retrofit_generator: ^8.1.0
-
   flutter_lints: ^3.0.0
 
 flutter:

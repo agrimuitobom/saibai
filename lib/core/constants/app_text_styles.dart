@@ -1,99 +1,129 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
-/// アプリ全体のテキストスタイル定義
 class AppTextStyles {
   AppTextStyles._();
 
-  // 丸みを帯びた読みやすいフォント（Noto Sans JP）
-  static TextStyle get _base => GoogleFonts.notoSansJp();
+  // Display
+  static const TextStyle displayLarge = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.5,
+  );
 
-  // 見出し系
-  static TextStyle get displayLarge => _base.copyWith(
-        fontSize: 32,
-        fontWeight: FontWeight.w700,
-        color: AppColors.onBackground,
-        height: 1.2,
-      );
+  static const TextStyle displayMedium = TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.25,
+  );
 
-  static TextStyle get headlineLarge => _base.copyWith(
-        fontSize: 26,
-        fontWeight: FontWeight.w700,
-        color: AppColors.onBackground,
-        height: 1.3,
-      );
+  // Headline
+  static const TextStyle headlineLarge = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get headlineMedium => _base.copyWith(
-        fontSize: 22,
-        fontWeight: FontWeight.w700,
-        color: AppColors.onBackground,
-        height: 1.3,
-      );
+  static const TextStyle headlineMedium = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get headlineSmall => _base.copyWith(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: AppColors.onBackground,
-        height: 1.4,
-      );
+  static const TextStyle headlineSmall = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
 
-  // 本文系
-  static TextStyle get bodyLarge => _base.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        color: AppColors.onSurface,
-        height: 1.6,
-      );
+  // Title
+  static const TextStyle titleLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get bodyMedium => _base.copyWith(
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        color: AppColors.onSurface,
-        height: 1.6,
-      );
+  static const TextStyle titleMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get bodySmall => _base.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-        color: AppColors.onSurfaceVariant,
-        height: 1.5,
-      );
+  static const TextStyle titleSmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+  );
 
-  // ラベル・キャプション
-  static TextStyle get labelLarge => _base.copyWith(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: AppColors.onSurface,
-        letterSpacing: 0.1,
-      );
+  // Body
+  static const TextStyle bodyLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get labelMedium => _base.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-        color: AppColors.onSurfaceVariant,
-        letterSpacing: 0.5,
-      );
+  static const TextStyle bodyMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get labelSmall => _base.copyWith(
-        fontSize: 11,
-        fontWeight: FontWeight.w500,
-        color: AppColors.onSurfaceVariant,
-        letterSpacing: 0.5,
-      );
+  static const TextStyle bodySmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+  );
 
-  // ボタン
-  static TextStyle get button => _base.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: AppColors.onPrimary,
-        letterSpacing: 0.5,
-      );
+  // Label
+  static const TextStyle labelLarge = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
 
-  static TextStyle get buttonSecondary => _base.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: AppColors.primary,
-        letterSpacing: 0.5,
-      );
+  static const TextStyle labelMedium = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+  );
+
+  static const TextStyle labelSmall = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textLight,
+  );
+
+  // Accent / on-primary
+  static const TextStyle appNameStyle = TextStyle(
+    fontSize: 36,
+    fontWeight: FontWeight.w700,
+    color: Colors.white,
+    letterSpacing: 1.0,
+  );
+
+  static const TextStyle taglineStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: Colors.white70,
+    letterSpacing: 0.5,
+  );
+
+  static const TextStyle buttonText = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  );
+
+  static const TextStyle chipText = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle navLabel = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+  );
 }

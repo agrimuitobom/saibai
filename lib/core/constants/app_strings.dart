@@ -1,89 +1,114 @@
-/// アプリ内の日本語文字列定数
 class AppStrings {
   AppStrings._();
 
-  // アプリ全般
+  // App
   static const String appName = 'ベジグロ';
   static const String appNameEn = 'VegeGro';
   static const String appTagline = 'Grow fresh. Grow happy.';
 
-  // ナビゲーション
+  // Bottom Nav
   static const String navHome = 'ホーム';
-  static const String navPestChecker = '病害虫';
-  static const String navCropEncyclopedia = '作物図鑑';
+  static const String navPest = '病害虫';
+  static const String navCropBook = '作物図鑑';
   static const String navBlog = 'ブログ';
+  static const String navTask = 'タスク';
   static const String navSettings = '設定';
 
-  // ホーム画面
-  static const String homeWeather = '今日の天気';
-  static const String homeTask = 'タスク';
-  static const String homeGrowing = '育てているもの';
-  static const String homeNoTask = 'タスクはありません';
-  static const String homeNoGrowing = '作物を追加してください';
+  // Home
+  static const String weather = '天気';
+  static const String todayWeather = '今日の天気';
+  static const String tasks = 'タスク';
+  static const String todayTasks = '今日のタスク';
+  static const String growingCrops = '育てているもの';
+  static const String viewAll = 'すべて見る';
+  static const String noTasks = 'タスクはありません';
+  static const String noCrops = '育てている作物はありません';
 
-  // 病害虫チェッカー
-  static const String pestCheckerTitle = '病害虫チェッカー';
-  static const String pestCheckerDescription = '病害虫の説明';
-  static const String pestCheckerTreatment = '対処法';
-  static const String pestCheckerPrevention = '対策・予防';
-  static const String pestCheckerCamera = 'カメラで撮影';
-  static const String pestCheckerGallery = 'アルバムから選択';
-  static const String pestCheckerAnalyzing = '診断中...';
-  static const String pestCheckerResult = '診断結果';
-  static const String pestCheckerNoResult = '問題は検出されませんでした';
+  // Task
+  static const String taskScreen = 'タスク管理';
+  static const String whatToDo = '何をするか';
+  static const String whenToDo = 'いつするか';
+  static const String category = 'カテゴリー';
+  static const String addTask = '追加';
+  static const String taskHint = 'タスクを入力してください';
+  static const String taskAdded = 'タスクを追加しました';
+  static const String taskDeleted = 'タスクを削除しました';
+  static const String taskCompleted = '完了';
+  static const String taskPending = '未完了';
 
-  // 作物図鑑
-  static const String cropEncyclopediaTitle = '作物図鑑';
-  static const String cropSearchHint = '作物名で検索...';
-  static const String cropVegetableName = '野菜の名前';
-  static const String cropGrowingMethod = '栽培方法や栽培期間';
-  static const String cropPestDisease = '主な病気や病害虫';
+  // Task Categories
+  static const String catWatering = '水やり';
+  static const String catFertilizing = '施肥';
+  static const String catHarvesting = '収穫';
+  static const String catPruning = '剪定';
+  static const String catPestControl = '病害虫対策';
+  static const String catOther = 'その他';
 
-  // ブログ
-  static const String blogTitle = 'ブログ';
-  static const String blogNewPost = '新しい投稿';
+  // Calendar
+  static const String calendar = 'カレンダー';
+  static const String calendarTasks = 'タスク一覧';
+
+  // Growing Crops
+  static const String growingCropsScreen = '育てている作物';
+  static const String cropItem = '項目';
+  static const String plantingDate = '日付';
+  static const String addCrop = '追加';
+  static const String cropNameHint = '作物名を入力してください';
+  static const String cropAdded = '作物を追加しました';
+  static const String cropDeleted = '作物を削除しました';
+
+  // Pest Checker
+  static const String pestChecker = '病害虫チェッカー';
+  static const String symptom = '症状';
+  static const String symptomItem = '項目';
+  static const String selectSymptom = '症状を選択する';
+  static const String search = '検索';
+  static const String pestDescription = '病害虫の説明';
+  static const String treatment = '対処法';
+  static const String prevention = '対策・予防';
+  static const String noResult = '該当する病害虫が見つかりませんでした';
+
+  // Crop Encyclopedia
+  static const String cropEncyclopedia = '作物図鑑';
+  static const String searchCrops = '作物を検索';
+  static const String cultivationMethod = '栽培方法や栽培期間';
+  static const String mainPests = '主な病気や病害虫';
+  static const String cropName = '野菜の名前';
+
+  // Blog
+  static const String blog = 'ブログ';
+  static const String addPost = '新しい投稿';
   static const String blogProfile = 'プロフィール';
-  static const String blogMyPosts = '自分が出してきたブログ';
-  static const String blogProfileName = '名前';
+  static const String myPosts = '自分の投稿';
+  static const String settings = '設定';
+  static const String postTitle = 'タイトル';
+  static const String postContent = '内容';
 
-  // タスク
-  static const String taskTitle = 'タスク';
-  static const String taskWhatToDo = '何をするか';
-  static const String taskWhenToDo = 'いつするか';
-  static const String taskCategory = 'カテゴリー';
-  static const String taskAddButton = '追加';
-  static const String taskComplete = '完了';
-  static const String taskDelete = '削除';
+  // Settings
+  static const String appSettings = 'アプリ設定';
+  static const String notifications = '通知';
+  static const String publicSettings = '公開設定';
+  static const String cultivationPlace = '栽培場所';
+  static const String cultivationRegion = '栽培地域';
+  static const String balcony = 'ベランダ';
+  static const String fieldGarden = '畑・庭';
+  static const String indoor = '室内';
+  static const String eastJapan = '東日本';
+  static const String westJapan = '西日本';
+  static const String chubu = '中部';
+  static const String kyushu = '九州';
 
-  // 設定
-  static const String settingsTitle = 'アプリ設定';
-  static const String settingsNotification = '通知';
-  static const String settingsNotificationOn = 'オン';
-  static const String settingsNotificationOff = 'オフ';
-  static const String settingsPublicSetting = '公開設定';
-  static const String settingsPublic = '公開';
-  static const String settingsPrivate = '非公開';
-  static const String settingsGrowingPlace = '栽培場所';
-  static const String settingsBalcony = 'ベランダ';
-  static const String settingsField = '畑・庭';
-  static const String settingsIndoor = '室内';
-  static const String settingsGrowingRegion = '栽培地域';
-  static const String settingsEastJapan = '東日本';
-  static const String settingsWestJapan = '西日本';
-  static const String settingsCentralJapan = '中部';
-  static const String settingsKyushu = '九州';
-
-  // エラーメッセージ
-  static const String errorGeneral = 'エラーが発生しました';
-  static const String errorNetwork = 'ネットワークエラーが発生しました';
-  static const String errorPermissionCamera = 'カメラへのアクセス許可が必要です';
-  static const String errorPermissionGallery = 'フォトライブラリへのアクセス許可が必要です';
-
-  // 共通ボタン
-  static const String buttonSave = '保存';
-  static const String buttonCancel = 'キャンセル';
-  static const String buttonDelete = '削除';
-  static const String buttonEdit = '編集';
-  static const String buttonRetry = '再試行';
-  static const String buttonClose = '閉じる';
+  // Common
+  static const String save = '保存';
+  static const String cancel = 'キャンセル';
+  static const String delete = '削除';
+  static const String edit = '編集';
+  static const String close = '閉じる';
+  static const String ok = 'OK';
+  static const String loading = '読み込み中...';
+  static const String error = 'エラーが発生しました';
+  static const String retry = '再試行';
+  static const String confirm = '確認';
+  static const String yes = 'はい';
+  static const String no = 'いいえ';
 }
