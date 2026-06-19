@@ -43,9 +43,11 @@ class CropDetailScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 40),
-                      Text(
-                        crop.emoji,
-                        style: const TextStyle(fontSize: 72),
+                      Image.asset(
+                        crop.imagePath,
+                        width: 96,
+                        height: 96,
+                        fit: BoxFit.contain,
                       ),
                     ],
                   ),

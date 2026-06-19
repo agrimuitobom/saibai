@@ -2,6 +2,7 @@ class CropModel {
   final String id;
   final String name;
   final String emoji;
+  final String imagePath;
   final String cultivationMethod;
   final String cultivationPeriod;
   final String mainPests;
@@ -12,6 +13,7 @@ class CropModel {
     required this.id,
     required this.name,
     required this.emoji,
+    required this.imagePath,
     required this.cultivationMethod,
     required this.cultivationPeriod,
     required this.mainPests,
@@ -23,6 +25,7 @@ class CropModel {
     String? id,
     String? name,
     String? emoji,
+    String? imagePath,
     String? cultivationMethod,
     String? cultivationPeriod,
     String? mainPests,
@@ -33,6 +36,7 @@ class CropModel {
       id: id ?? this.id,
       name: name ?? this.name,
       emoji: emoji ?? this.emoji,
+      imagePath: imagePath ?? this.imagePath,
       cultivationMethod: cultivationMethod ?? this.cultivationMethod,
       cultivationPeriod: cultivationPeriod ?? this.cultivationPeriod,
       mainPests: mainPests ?? this.mainPests,
@@ -46,6 +50,7 @@ class CropModel {
       'id': id,
       'name': name,
       'emoji': emoji,
+      'imagePath': imagePath,
       'cultivationMethod': cultivationMethod,
       'cultivationPeriod': cultivationPeriod,
       'mainPests': mainPests,
@@ -59,6 +64,7 @@ class CropModel {
       id: json['id'] as String,
       name: json['name'] as String,
       emoji: json['emoji'] as String,
+      imagePath: json['imagePath'] as String,
       cultivationMethod: json['cultivationMethod'] as String,
       cultivationPeriod: json['cultivationPeriod'] as String,
       mainPests: json['mainPests'] as String,
