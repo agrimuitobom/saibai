@@ -208,6 +208,7 @@ textarea.text-input{resize:none}
 }
 .gcrop-icon{width:48px;height:48px;border-radius:12px;background:rgba(92,138,60,.1);
   display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.gcrop-icon img{width:32px;height:32px;object-fit:contain}
 .gcrop-name{font-size:16px;font-weight:700;color:var(--text)}
 .gcrop-date{font-size:12px;color:var(--text2);margin-top:2px}
 .gcrop-days{font-size:12px;font-weight:700;color:var(--primary);margin-top:2px}
@@ -253,6 +254,7 @@ textarea.text-input{resize:none}
   width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;
   background:rgba(92,138,60,.08)
 }
+.crop-cell-icon img{width:36px;height:36px;object-fit:contain}
 .crop-cell-name{font-size:12px;font-weight:600;text-align:center}
 .crop-cell-season{font-size:10px;color:var(--text2)}
 
@@ -260,6 +262,7 @@ textarea.text-input{resize:none}
 .det-hero{height:170px;background:linear-gradient(135deg,#5C8A3C,#7AB55A);display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:8px;flex-shrink:0;position:relative}
 .det-hero .emoji{font-size:62px}
+.det-hero img.crop-hero-img{width:84px;height:84px;object-fit:contain}
 .det-hero .name{color:#fff;font-size:17px;font-weight:700}
 .det-back{position:absolute;top:14px;left:16px;width:30px;height:30px;border-radius:50%;
   background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
@@ -588,7 +591,7 @@ textarea.text-input{resize:none}
         </div>
         <div class="list-subhead" style="font-size:16px;font-weight:700;color:var(--text)">育てている作物</div>
         <div class="gcrop-row">
-          <div class="gcrop-icon">🍅</div>
+          <div class="gcrop-icon"><img src="../assets/images/crops/tomato.png" alt="トマト"></div>
           <div style="flex:1">
             <div class="gcrop-name">トマト</div>
             <div class="gcrop-date">植え付け：2026年4月20日</div>
@@ -597,7 +600,7 @@ textarea.text-input{resize:none}
           <div class="task-del"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/></svg></div>
         </div>
         <div class="gcrop-row">
-          <div class="gcrop-icon">🥒</div>
+          <div class="gcrop-icon"><img src="../assets/images/crops/cucumber.png" alt="きゅうり"></div>
           <div style="flex:1">
             <div class="gcrop-name">きゅうり</div>
             <div class="gcrop-date">植え付け：2026年5月3日</div>
@@ -606,7 +609,7 @@ textarea.text-input{resize:none}
           <div class="task-del"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/></svg></div>
         </div>
         <div class="gcrop-row">
-          <div class="gcrop-icon">🍆</div>
+          <div class="gcrop-icon"><img src="../assets/images/crops/eggplant.png" alt="ナス"></div>
           <div style="flex:1">
             <div class="gcrop-name">ナス</div>
             <div class="gcrop-date">植え付け：2026年5月10日</div>
@@ -871,40 +874,40 @@ textarea.text-input{resize:none}
 <script>
 /* ---------------- Data ---------------- */
 const CROPS = [
-  {id:'1',name:'トマト',emoji:'🍅',season:'夏',difficulty:'普通',
+  {id:'1',name:'トマト',emoji:'🍅',img:'../assets/images/crops/tomato.png',season:'夏',difficulty:'普通',
     method:'トマトは日光を好む野菜です。深さ30cm以上のプランターに植え付け、支柱を立てて育てます。苗の植え付け時期は4〜5月が適期で、整枝（わき芽かき）をしながら育てます。液体肥料は10日に1回程度施します。水やりは土の表面が乾いたらたっぷりと与えてください。\n\n栽培期間：約4〜6ヶ月（定植から収穫まで）\n植え付け：4〜5月\n収穫：7〜10月',
     pests:'疫病、灰色かび病、うどんこ病\nアブラムシ、コナジラミ、ハモグリバエ\n予防には定期的な薬剤散布と通気性の確保が大切です。'},
-  {id:'2',name:'きゅうり',emoji:'🥒',season:'夏',difficulty:'易しい',
+  {id:'2',name:'きゅうり',emoji:'🥒',img:'../assets/images/crops/cucumber.png',season:'夏',difficulty:'易しい',
     method:'きゅうりは成長が早く、定植から約50日で収穫できます。ネットや支柱にツルを誘引しながら育てます。水分を多く必要とするため、土が乾かないよう注意しましょう。プランターの場合は大型（深さ30cm以上）のものを使用し、毎日水やりが必要です。\n\n栽培期間：約3〜4ヶ月\n植え付け：4〜6月\n収穫：6〜9月',
     pests:'べと病、うどんこ病、炭疽病\nアブラムシ、ウリハムシ、ハダニ\nうどんこ病は特に発生しやすいため、密植を避け通気性を保ちましょう。'},
-  {id:'3',name:'ナス',emoji:'🍆',season:'夏',difficulty:'普通',
+  {id:'3',name:'ナス',emoji:'🍆',img:'../assets/images/crops/eggplant.png',season:'夏',difficulty:'普通',
     method:'ナスは高温を好む野菜で、十分な日当たりと水分が必要です。植え付け後は支柱を立て、主枝と側枝2本の3本仕立てにするのが基本です。乾燥に弱いため、夏場は朝夕の水やりが必要です。追肥は2〜3週間に1回行いましょう。\n\n栽培期間：約5〜6ヶ月\n植え付け：5月\n収穫：7〜10月',
     pests:'褐色腐敗病、半身萎凋病\nアブラムシ、ハダニ、アザミウマ\n連作すると病気が発生しやすくなるため、4〜5年の輪作が必要です。'},
-  {id:'4',name:'ピーマン',emoji:'🫑',season:'夏',difficulty:'易しい',
+  {id:'4',name:'ピーマン',emoji:'🫑',img:'../assets/images/crops/pepper.png',season:'夏',difficulty:'易しい',
     method:'ピーマンはトマトと同様の管理で育てられます。整枝をして風通しを良くすることが大切です。実が小さいうちに収穫すると株が弱りにくく、長期間収穫を楽しめます。比較的丈夫で育てやすい野菜です。連続して収穫できる長期栽培も可能です。\n\n栽培期間：約5〜6ヶ月\n植え付け：5月\n収穫：7〜10月',
     pests:'疫病、灰色かび病\nアブラムシ、コナジラミ、ハダニ\n高温乾燥時にハダニが多発しやすいため、葉水を与えることが効果的です。'},
-  {id:'5',name:'にんじん',emoji:'🥕',season:'春・秋',difficulty:'普通',
+  {id:'5',name:'にんじん',emoji:'🥕',img:'../assets/images/crops/carrot.png',season:'春・秋',difficulty:'普通',
     method:'にんじんは種から育てる根菜類です。深さ30cm以上の深い土が必要で、石や硬い土があると股根になります。種まき後は発芽するまで土を乾かさないようにします。間引きを2〜3回行い、最終的に株間10〜15cmにします。\n\n栽培期間：約3〜4ヶ月\n種まき：春（3〜4月）、秋（8〜9月）\n収穫：春まき→7〜8月、秋まき→11〜12月',
     pests:'キャロットフライ、軟腐病、黒葉枯病\n連作障害が出やすいため、同じ場所への連作は4〜5年あけましょう。'},
-  {id:'6',name:'大根',emoji:'🫚',season:'春・秋',difficulty:'易しい',
+  {id:'6',name:'大根',emoji:'🫚',img:'../assets/images/crops/daikon.png',season:'春・秋',difficulty:'易しい',
     method:'大根は種から育てる根菜で、深くまで耕した土が必要です。点まき（1か所に3〜4粒）で種をまき、順次間引いて1本立てにします。土寄せを行い、根が地上に出ないようにしましょう。プランター栽培には短根種（聖護院大根など）が適しています。\n\n栽培期間：約2〜3ヶ月\n種まき：春（3〜4月）、秋（8〜10月）\n収穫：春まき→5〜7月、秋まき→11〜1月',
     pests:'軟腐病、ウイルス病\nアブラムシ、アオムシ、コナガ\nアブラムシによるウイルス病の媒介に注意が必要です。'},
-  {id:'7',name:'キャベツ',emoji:'🥬',season:'春・秋',difficulty:'普通',
+  {id:'7',name:'キャベツ',emoji:'🥬',img:'../assets/images/crops/cabbage.png',season:'春・秋',difficulty:'普通',
     method:'キャベツは冷涼な気候を好む野菜です。苗を植え付け後、株が大きくなったら土寄せを行います。外葉が十分に成長してから結球が始まるため、外葉を大切に育てることが重要です。防虫ネットの使用が病害虫対策に非常に有効です。\n\n栽培期間：約3〜4ヶ月\n植え付け：春（3〜4月）、秋（9〜10月）\n収穫：春植え→6〜7月、秋植え→12〜翌2月',
     pests:'べと病、根こぶ病、黒腐病\nアオムシ、コナガ、ヨトウムシ\n防虫ネットで覆うことが最も効果的な対策です。'},
-  {id:'8',name:'レタス',emoji:'🥗',season:'春・秋',difficulty:'易しい',
+  {id:'8',name:'レタス',emoji:'🥗',img:'../assets/images/crops/lettuce.png',season:'春・秋',difficulty:'易しい',
     method:'レタスは冷涼な気候を好み、高温になると苦みが出て抽苔（とう立ち）しやすくなります。半日陰でも育てられるため、ベランダ栽培にも適しています。水はけが良く保水性のある土を好みます。葉かきレタスは外葉から順に収穫できるため長期間楽しめます。\n\n栽培期間：約2〜3ヶ月\n種まき・植え付け：春（3〜4月）、秋（9〜10月）\n収穫：春→5〜6月、秋→11〜12月',
     pests:'べと病、腐敗病\nアブラムシ、ナメクジ\n過湿にならないよう管理し、アブラムシの早期発見に努めましょう。'},
-  {id:'9',name:'ほうれん草',emoji:'🥬',season:'春・秋',difficulty:'普通',
+  {id:'9',name:'ほうれん草',emoji:'🥬',img:'../assets/images/crops/spinach.png',season:'春・秋',difficulty:'普通',
     method:'ほうれん草は酸性土壌に弱いため、苦土石灰で土壌のpHを中性（6.5〜7.0）に調整してから栽培します。種まき前に一晩水に浸すと発芽が揃います。筋まきか散まきにして、間引きながら育てます。成長が早く、種まきから30〜40日で収穫できます。\n\n栽培期間：約1〜2ヶ月\n種まき：春（3〜4月）、秋（9〜10月）\n収穫：春→5月、秋→11〜12月',
     pests:'萎凋病、べと病\nアブラムシ\n酸性土壌での萎凋病発生に注意し、適切なpH管理を行いましょう。'},
-  {id:'10',name:'じゃがいも',emoji:'🥔',season:'春',difficulty:'易しい',
+  {id:'10',name:'じゃがいも',emoji:'🥔',img:'../assets/images/crops/potato.png',season:'春',difficulty:'易しい',
     method:'じゃがいもは種いもを植えて育てます。芽が出たら土寄せを行い、緑化を防ぎましょう。花が咲いたら追肥の目安です。収穫は茎葉が枯れてきたら行います。連作すると病気が出やすいため、3〜4年の輪作が必要です。プランター栽培も可能です。\n\n栽培期間：約3〜4ヶ月\n植え付け：春（2〜3月）、秋（8〜9月）\n収穫：春植え→6〜7月、秋植え→11〜12月',
     pests:'疫病、そうか病、軟腐病\nアブラムシ、ジャガイモガ、コロラドハムシ\n疫病は梅雨時に多発するため、天候に注意して管理しましょう。'},
-  {id:'11',name:'たまねぎ',emoji:'🧅',season:'秋植え・春収穫',difficulty:'普通',
+  {id:'11',name:'たまねぎ',emoji:'🧅',img:'../assets/images/crops/onion.png',season:'秋植え・春収穫',difficulty:'普通',
     method:'たまねぎは苗から育てるのが一般的です。植え付けは秋に行い、越冬させて春〜初夏に収穫します。植え付け間隔は15cmが目安です。葉が倒れてきたら収穫のサインです。収穫後は風通しの良い場所で乾燥させることで長期保存が可能です。\n\n栽培期間：約6〜7ヶ月\n植え付け：10〜11月\n収穫：5〜6月',
     pests:'べと病、軟腐病、黒腐菌核病\nネギコガ、アブラムシ\n植え付けが浅すぎると球が十分に成長しないため、深さに注意しましょう。'},
-  {id:'12',name:'ブロッコリー',emoji:'🥦',season:'春・秋',difficulty:'普通',
+  {id:'12',name:'ブロッコリー',emoji:'🥦',img:'../assets/images/crops/broccoli.png',season:'春・秋',difficulty:'普通',
     method:'ブロッコリーは冷涼な気候を好みます。頂花蕾を収穫した後も、側枝から小さな花蕾が出るため長期間収穫を楽しめます。深めのプランター（深さ30cm以上）に1株植えるのが基本です。花が咲き始める前に収穫しましょう。防虫ネットで害虫対策を行うことが大切です。\n\n栽培期間：約3〜4ヶ月\n植え付け：春（3〜4月）、秋（8〜9月）\n収穫：春植え→5〜6月、秋植え→11〜12月',
     pests:'黒腐病、べと病\nアオムシ、コナガ、ヨトウムシ\n防虫ネットの使用が最も効果的な対策です。モンシロチョウの飛来に注意しましょう。'},
 ];
@@ -1062,7 +1065,7 @@ function renderCropGrid(list){
   }
   grid.innerHTML = list.map(c=>
     '<div class="crop-cell" onclick="openCropDetail(\''+c.id+'\')">'+
-      '<div class="crop-cell-icon">'+c.emoji+'</div>'+
+      '<div class="crop-cell-icon">'+(c.img?'<img src="'+c.img+'" alt="'+c.name+'">':c.emoji)+'</div>'+
       '<div class="crop-cell-name">'+c.name+'</div>'+
       '<div class="crop-cell-season">'+c.season+'</div>'+
     '</div>'
@@ -1078,7 +1081,9 @@ renderCropGrid(CROPS);
 function openCropDetail(id){
   const c = CROPS.find(x=>x.id===id);
   if(!c) return;
-  document.getElementById('detEmoji').textContent = c.emoji;
+  document.getElementById('detEmoji').innerHTML = c.img
+    ? '<img class="crop-hero-img" src="'+c.img+'" alt="'+c.name+'">'
+    : c.emoji;
   document.getElementById('detName').textContent = c.name;
   document.getElementById('detName2').textContent = c.name;
   document.getElementById('detSeason').textContent = c.season;
