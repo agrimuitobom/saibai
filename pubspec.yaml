@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # 状態管理
   flutter_riverpod: ^2.5.1
@@ -28,7 +30,7 @@ dependencies:
   image_picker: ^1.1.2
 
   # ユーティリティ
-  intl: ^0.19.0
+  intl: any
   uuid: ^4.4.0
 
   # カレンダー
@@ -50,4 +52,3 @@ flutter:
   assets:
     - assets/images/
     - assets/images/crops/
-    - assets/icons/
