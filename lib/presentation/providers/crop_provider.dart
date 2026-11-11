@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/crop_model.dart';
 import '../../data/repositories/crop_repository.dart';
-import '../../data/repositories/task_repository.dart';
+import 'task_provider.dart';
 
 final cropRepositoryProvider = Provider<CropRepository>((ref) => CropRepository());
 
