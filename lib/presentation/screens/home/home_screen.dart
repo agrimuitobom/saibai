@@ -48,16 +48,10 @@ class HomeScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     child: Row(
                       children: [
-                        Container(
+                        Image.asset(
+                          'assets/images/app_icon.png',
                           width: 44,
                           height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            child: Text('🌱', style: TextStyle(fontSize: 24)),
-                          ),
                         ),
                         const SizedBox(width: 12),
                         Column(
