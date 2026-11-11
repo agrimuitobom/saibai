@@ -6,13 +6,18 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../data/services/weather_service.dart';
+import '../../providers/settings_provider.dart';
 import '../../providers/task_provider.dart';
 import '../../providers/crop_provider.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/section_header.dart';
 
-final weatherProvider = FutureProvider<WeatherData>((ref) {
-  return WeatherService().fetchWeather();
+final weatherProvider = FutureProvider<WeatherData>((ref) async {
+  // 現在地が取れないときは、設定の栽培地域の代表都市の天気を表示する
+  final region = await ref.watch(
+    settingsProvider.selectAsync((s) => s.cultivationRegion),
+  );
+  return WeatherService().fetchWeather(region: region);
 });
 
 class HomeScreen extends ConsumerWidget {
