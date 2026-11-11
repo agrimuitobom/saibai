@@ -44,11 +44,34 @@ class WeatherService {
     '九州': _Place('福岡', 33.5902, 130.4017),
   };
 
-  Future<WeatherData> fetchWeather({String region = '東日本'}) async {
-    final place = await _currentPlace() ??
-        _regionPlaces[region] ??
-        _regionPlaces['東日本']!;
+  /// 天気を順に流す。まず設定の栽培地域の代表都市の天気をすぐに返し、
+  /// 端末の現在地が取得できたら、その場所の天気で上書きする。
+  /// ブラウザによっては位置情報の問い合わせが応答を返さないことがあるため、
+  /// 現在地を待たずに表示できるようにしている。
+  Stream<WeatherData> watchWeather({String region = '東日本'}) async* {
+    final currentPlace = _currentPlace();
+    final fallback = _regionPlaces[region] ?? _regionPlaces['東日本']!;
 
+    Object? fallbackError;
+    try {
+      yield await _fetch(fallback);
+    } catch (e) {
+      fallbackError = e;
+    }
+
+    final place = await currentPlace;
+    if (place != null) {
+      try {
+        yield await _fetch(place);
+        return;
+      } catch (_) {
+        // 現在地の天気が取れなくても、地域の天気が出ていればそのままにする
+      }
+    }
+    if (fallbackError != null) throw fallbackError;
+  }
+
+  Future<WeatherData> _fetch(_Place place) async {
     final uri = Uri.https('api.open-meteo.com', '/v1/forecast', {
       'latitude': place.latitude.toStringAsFixed(4),
       'longitude': place.longitude.toStringAsFixed(4),
@@ -80,25 +103,32 @@ class WeatherService {
   /// 端末の現在地。権限拒否・非対応・タイムアウト時は null。
   Future<_Place?> _currentPlace() async {
     try {
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        return null;
-      }
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.low,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
-      return _Place(
-          currentLocationLabel, position.latitude, position.longitude);
+      // ブラウザ側のタイムアウトが効かず応答が返らないケースがあるので、
+      // 許可ダイアログに答える時間も含めて Dart 側でも上限を設ける。
+      return await _locate().timeout(_locationTimeout);
     } catch (_) {
       return null;
     }
+  }
+
+  static const Duration _locationTimeout = Duration(seconds: 30);
+
+  Future<_Place?> _locate() async {
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      return null;
+    }
+    final position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.low,
+        timeLimit: Duration(seconds: 10),
+      ),
+    );
+    return _Place(currentLocationLabel, position.latitude, position.longitude);
   }
 
   /// WMO weather interpretation code → (日本語の天気, 絵文字)

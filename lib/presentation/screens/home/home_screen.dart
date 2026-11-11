@@ -12,12 +12,12 @@ import '../../providers/crop_provider.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/section_header.dart';
 
-final weatherProvider = FutureProvider<WeatherData>((ref) async {
-  // 現在地が取れないときは、設定の栽培地域の代表都市の天気を表示する
+final weatherProvider = StreamProvider<WeatherData>((ref) async* {
+  // まず設定の栽培地域の天気を表示し、現在地が取れたら差し替える
   final region = await ref.watch(
     settingsProvider.selectAsync((s) => s.cultivationRegion),
   );
-  return WeatherService().fetchWeather(region: region);
+  yield* WeatherService().watchWeather(region: region);
 });
 
 class HomeScreen extends ConsumerWidget {
