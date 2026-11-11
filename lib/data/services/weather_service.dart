@@ -10,13 +10,26 @@ class WeatherData {
   final String icon;
   final String location;
 
+  /// 現在地を使えなかったときの説明。現在地の天気を表示できていれば null。
+  final String? note;
+
   const WeatherData({
     required this.condition,
     required this.temperature,
     required this.humidity,
     required this.icon,
     required this.location,
+    this.note,
   });
+
+  WeatherData withNote(String? note) => WeatherData(
+        condition: condition,
+        temperature: temperature,
+        humidity: humidity,
+        icon: icon,
+        location: location,
+        note: note,
+      );
 }
 
 class _Place {
@@ -52,14 +65,16 @@ class WeatherService {
     final currentPlace = _currentPlace();
     final fallback = _regionPlaces[region] ?? _regionPlaces['東日本']!;
 
+    WeatherData? fallbackWeather;
     Object? fallbackError;
     try {
-      yield await _fetch(fallback);
+      fallbackWeather = await _fetch(fallback);
+      yield fallbackWeather;
     } catch (e) {
       fallbackError = e;
     }
 
-    final place = await currentPlace;
+    final (place, failure) = await currentPlace;
     if (place != null) {
       try {
         yield await _fetch(place);
@@ -68,7 +83,12 @@ class WeatherService {
         // 現在地の天気が取れなくても、地域の天気が出ていればそのままにする
       }
     }
-    if (fallbackError != null) throw fallbackError;
+    if (fallbackWeather == null) throw fallbackError!;
+    // 現在地を使えなかった理由を添えて、地域の天気を出し直す
+    yield fallbackWeather.withNote(
+      '${failure ?? '現在地の天気を取得できませんでした。'}'
+      '${fallback.name}の天気を表示しています。',
+    );
   }
 
   Future<WeatherData> _fetch(_Place place) async {
@@ -100,35 +120,46 @@ class WeatherService {
     );
   }
 
-  /// 端末の現在地。権限拒否・非対応・タイムアウト時は null。
-  Future<_Place?> _currentPlace() async {
+  /// 端末の現在地。取得できなかった場合は (null, 利用者向けの理由)。
+  Future<(_Place?, String?)> _currentPlace() async {
     try {
       // ブラウザ側のタイムアウトが効かず応答が返らないケースがあるので、
       // 許可ダイアログに答える時間も含めて Dart 側でも上限を設ける。
       return await _locate().timeout(_locationTimeout);
+    } on PermissionDeniedException {
+      return (null, _deniedMessage);
+    } on LocationServiceDisabledException {
+      return (null, _unavailableMessage);
     } catch (_) {
-      return null;
+      // 位置を特定できない・応答がない（POSITION_UNAVAILABLE / timeout）
+      return (null, _unavailableMessage);
     }
   }
 
   static const Duration _locationTimeout = Duration(seconds: 30);
+  static const String _deniedMessage = '位置情報の利用が許可されていません。';
+  static const String _unavailableMessage =
+      '現在地を取得できませんでした（端末の位置情報サービスがオフの可能性があります）。';
 
-  Future<_Place?> _locate() async {
+  Future<(_Place?, String?)> _locate() async {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
-      return null;
+      return (null, _deniedMessage);
     }
     final position = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.low,
-        timeLimit: Duration(seconds: 10),
+        timeLimit: Duration(seconds: 15),
       ),
     );
-    return _Place(currentLocationLabel, position.latitude, position.longitude);
+    return (
+      _Place(currentLocationLabel, position.latitude, position.longitude),
+      null,
+    );
   }
 
   /// WMO weather interpretation code → (日本語の天気, 絵文字)

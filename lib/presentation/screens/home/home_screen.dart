@@ -92,23 +92,41 @@ class HomeScreen extends ConsumerWidget {
                 const SizedBox(height: 8),
                 weatherAsync.when(
                   data: (w) => AppCard(
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(w.icon, style: const TextStyle(fontSize: 48)),
-                        const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Text(
-                              '${w.temperature}°C  ${w.condition}',
-                              style: AppTextStyles.headlineMedium,
-                            ),
-                            Text(
-                              '湿度 ${w.humidity}%  ${w.location}',
-                              style: AppTextStyles.bodySmall,
+                            Text(w.icon, style: const TextStyle(fontSize: 48)),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${w.temperature}°C  ${w.condition}',
+                                  style: AppTextStyles.headlineMedium,
+                                ),
+                                Text(
+                                  '湿度 ${w.humidity}%  ${w.location}',
+                                  style: AppTextStyles.bodySmall,
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        if (w.note != null) ...[
+                          const SizedBox(height: 8),
+                          Text(w.note!, style: AppTextStyles.bodySmall),
+                          TextButton.icon(
+                            onPressed: () => ref.invalidate(weatherProvider),
+                            icon: const Icon(Icons.my_location, size: 16),
+                            label: const Text('現在地を再取得'),
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
