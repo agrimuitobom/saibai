@@ -5,6 +5,7 @@ class AppColors {
 
   // Primary palette
   static const Color background = Color(0xFFF5F0E8);
+  static const Color frameBackground = Color(0xFFDDE5D3);
   static const Color primary = Color(0xFF5C8A3C);
   static const Color primaryLight = Color(0xFF7AB55A);
   static const Color primaryDark = Color(0xFF3D6428);
