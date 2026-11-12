@@ -31,6 +31,15 @@ jobs:
       - run: >-
           flutter build web --release --no-web-resources-cdn
           --base-href "/${{ github.event.repository.name }}/"
+      # Browsers keep main.dart.js / flutter_bootstrap.js cached under the same
+      # name, so a reload could keep showing the previous version. Tag both
+      # with the commit so one reload always picks up the new build.
+      - name: Add cache-busting version to script URLs
+        run: |
+          grep -q '"mainJsPath":"main.dart.js"' build/web/flutter_bootstrap.js
+          grep -q 'src="flutter_bootstrap.js"' build/web/index.html
+          sed -i 's|"mainJsPath":"main.dart.js"|"mainJsPath":"main.dart.js?v=${{ github.sha }}"|' build/web/flutter_bootstrap.js
+          sed -i 's|src="flutter_bootstrap.js"|src="flutter_bootstrap.js?v=${{ github.sha }}"|' build/web/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
