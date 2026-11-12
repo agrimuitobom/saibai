@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../providers/sample_data_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/section_header.dart';
@@ -203,6 +204,72 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           );
                         }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Data
+                SectionHeader(title: 'データ'),
+                const SizedBox(height: 10),
+                AppCard(
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.auto_awesome,
+                            color: AppColors.primary),
+                        title: Text('サンプルデータを追加',
+                            style: AppTextStyles.titleMedium),
+                        subtitle: Text('作物とタスクの例を追加します',
+                            style: AppTextStyles.bodySmall),
+                        onTap: () async {
+                          await addSampleData(ref);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('サンプルデータを追加しました')),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, indent: 56),
+                      ListTile(
+                        leading: const Icon(Icons.delete_outline,
+                            color: AppColors.error),
+                        title: Text('データをすべて消す',
+                            style: AppTextStyles.titleMedium),
+                        subtitle: Text('タスクと育てている作物を削除します',
+                            style: AppTextStyles.bodySmall),
+                        onTap: () async {
+                          final ok = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('データをすべて消しますか？'),
+                              content: const Text(
+                                  'タスクと育てている作物がすべて削除されます。元に戻せません。'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('キャンセル'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text('消す',
+                                      style:
+                                          TextStyle(color: AppColors.error)),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (ok != true) return;
+                          await clearAllData(ref);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('データを消しました')),
+                          );
+                        },
                       ),
                     ],
                   ),

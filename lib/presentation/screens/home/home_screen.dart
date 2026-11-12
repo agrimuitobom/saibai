@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../data/services/weather_service.dart';
+import '../../providers/sample_data_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/task_provider.dart';
 import '../../providers/crop_provider.dart';
@@ -84,6 +85,33 @@ class HomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
+                // まだ何も登録していない人向けの案内
+                if ((tasksAsync.valueOrNull?.isEmpty ?? false) &&
+                    (growingCropsAsync.valueOrNull?.isEmpty ?? false)) ...[
+                  AppCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('はじめての方へ', style: AppTextStyles.titleMedium),
+                        const SizedBox(height: 4),
+                        Text(
+                          'サンプルの作物とタスクを入れて、アプリの使い方を試せます。あとから設定画面で消せます。',
+                          style: AppTextStyles.bodySmall,
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () => addSampleData(ref),
+                            icon: const Icon(Icons.auto_awesome, size: 18),
+                            label: const Text('サンプルデータを入れる'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
                 // 天気 card
                 SectionHeader(
                   title: AppStrings.todayWeather,
